@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 
-from .models import Challenges, Game
+from .models import Challenge, Game
 
 
 class IndexView(generic.ListView):

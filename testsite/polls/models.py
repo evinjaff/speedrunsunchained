@@ -29,7 +29,7 @@ class Game(models.Model):
 		return now - datetime.timedelta(days=1) <= self.pub_date <= now
 
 
-class Challenges(models.Model):
+class Challenge(models.Model):
 	game = models.ForeignKey(Game, on_delete=models.CASCADE)
 	
 	challenge_title = models.CharField(max_length=200, default="")

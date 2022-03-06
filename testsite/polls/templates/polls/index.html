@@ -5,7 +5,7 @@
 {% if latest_Game_list %}
   <ul>
   {% for game in latest_Game_list %}
-    <li><a href="/polls/{{ game.id }}/">{{ game.question_text }}</a></li>
+    <li><a href="/polls/{{ game.id }}/">{{ game.game_title }}</a></li>
   {% endfor %}
   </ul>
 {% else %}

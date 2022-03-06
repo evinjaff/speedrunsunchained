@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from .models import Challenges, Game
+from .models import Challenge, Game
 
 
 class ChallengesInline(admin.StackedInline):
-    model = Challenges
+    model = Challenge
     extra = 3
 
 
