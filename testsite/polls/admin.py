@@ -1,18 +1,18 @@
 from django.contrib import admin
 
-from .models import Choice, Question
+from .models import Challenges, Game
 
 
-class ChoiceInline(admin.StackedInline):
-    model = Choice
+class ChallengesInline(admin.StackedInline):
+    model = Challenges
     extra = 3
 
 
-class QuestionAdmin(admin.ModelAdmin):
+class GameAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None,               {'fields': ['question_text']}),
+        (None,               {'fields': ['game_title', 'year_published', 'console', 'genre', 'ROM', 'tagblob']}),
         ('Date information', {'fields': ['pub_date'], 'classes': ['collapse']}),
     ]
-    inlines = [ChoiceInline]
+    inlines = [ChallengesInline]
 
-admin.site.register(Question, QuestionAdmin)
+admin.site.register(Game, GameAdmin)
