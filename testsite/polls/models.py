@@ -15,15 +15,15 @@ def get_upload_file_name(instance, filename):
 # This will be the game submitted
 class Game(models.Model):
 	game_title = models.CharField(max_length=100)
-	pub_date = models.DateTimeField('date published')
+	pub_date = models.DateTimeField('date published', default=timezone.now)
 	year_published = models.CharField(max_length=5)
 	console = models.CharField(default="N/A", max_length=100)
 	genre = models.CharField(max_length=100)
-	ROM = models.FileField(upload_to=get_upload_file_name)
+	ROM = models.FileField(upload_to=get_upload_file_name, null=True)
 	tagblob = models.TextField(default="None", max_length=400)
 
 	def get_absolute_url(self):
-		return reverse('author-detail', kwargs={'pk': self.pk})
+		return reverse('polls:detail', kwargs={'pk': self.pk})
 
 	
 	def __str__(self):

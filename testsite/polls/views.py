@@ -40,7 +40,7 @@ class GameCreateView(CreateView):
     model = Game
     fields = [
     'game_title',
-	'pub_date',
+	'year_published',
 	'console',
 	'genre', 
 	'ROM', 
@@ -51,6 +51,17 @@ class GameCreateView(CreateView):
         initial = super().get_initial(**kwargs)
         initial['game_title'] = 'Enter Game Title'
         return initial
+
+    def form_valid(self, form):
+        print('form_valid called')
+        form.instance.user = self.request.user
+        return super(GameCreateView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        print('form_invalid called')
+        response = super().form_invalid(form)
+        return super(GameCreateView, self).form_invalid(form)
+
 
 
 
