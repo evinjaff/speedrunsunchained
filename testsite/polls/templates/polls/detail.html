@@ -4,10 +4,17 @@
 
 <form action="{% url 'polls:vote' game.id %}" method="post">
 {% csrf_token %}
-{% for challenge in game.challenge_set.all %}
+<!-- {% for challenge in game.challenge_set.all %}
     <label>{{ challenge.upvotes }}</label>
     <input type="radio" name="challenge" id="challenge{{ forloop.counter }}" value="{{ challenge.id }}">
     <label for="challenge{{ forloop.counter }}">{{ challenge.challenge_title }}</label><br>
+{% endfor %} -->
+
+{% for challenge in game.challenge_set.all %}
+    <label>{{ challenge.upvotes }}</label>
+    <a href="challenges/{{ challenge.game_sub_id }}">{{ challenge.challenge_title }}</a>
+    </label><br>
 {% endfor %}
+
 <input type="submit" value="Vote">
 </form>

@@ -1,6 +1,13 @@
 {% load static %}
 
+
+
 <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+
+<form action="/polls/addgame/" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Add Game">
+</form>
 
 {% if latest_Game_list %}
   <ul>

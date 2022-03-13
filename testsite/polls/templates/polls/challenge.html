@@ -1,0 +1,21 @@
+<h1>{{ challenge.challenge_title }}</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+{% csrf_token %}
+
+<form action="upvote" method="post">
+<input type="submit" value="upvote">
+</form>
+
+<form action="downvote" method="post">
+<input type="submit" value="downvote">
+</form>
+
+<h3>Comments:</h3>
+
+<div>{{challenge.commentblob}}</div>
+
+<div>{{gameid}} {{challengeid}}</div>
+<div>{{pk}} {{chal}}</div>
+

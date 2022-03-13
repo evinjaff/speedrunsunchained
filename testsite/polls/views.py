@@ -1,10 +1,13 @@
+from mimetypes import init
 from .models import Game
+from .forms import AddGame
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.utils import timezone
+from django.views.generic.edit import FormView, CreateView, DeleteView, UpdateView
 
 from .models import Challenge, Game
 
@@ -15,7 +18,7 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """
-        Return the last five published Games (not including those set to be
+        Return the last 20 published Games (not including those set to be
         published in the future).
         """
         return Game.objects.filter(
@@ -32,6 +35,40 @@ class DetailView(generic.DetailView):
         Excludes any Games that aren't published yet.
         """
         return Game.objects.filter(pub_date__lte=timezone.now())
+
+class GameCreateView(CreateView):
+    model = Game
+    fields = [
+    'game_title',
+	'pub_date',
+	'console',
+	'genre', 
+	'ROM', 
+	'tagblob'
+    ]
+
+    def get_initial(self, *args, **kwargs):
+        initial = super().get_initial(**kwargs)
+        initial['game_title'] = 'Enter Game Title'
+        return initial
+
+
+
+class ChallengeView(generic.DetailView):
+    model = Challenge
+    template_name = 'polls/challenge.html'
+
+    def get_queryset(self):
+        return Challenge.objects
+
+    def custom_page(request, pk, chal):
+        #use in view func or pass to template via context
+        print("pk {} chal: {}".format(pk, chal))
+        print("request {}".format(request))
+        queried = Challenge.objects.filter(game_id=pk).filter(game_sub_id=chal)
+        print(queried)
+        context = {"gameid": pk, "challengeid": chal, "challenge": queried[0]}
+        return render(request, 'polls/challenge.html', context=context)
 
 
 class ResultsView(generic.DetailView):
@@ -55,3 +92,6 @@ def vote(request, Game_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(Game.id,)))
+
+def vote_chal(request, Challenge_id):
+    return HttpResponseRedirect(reverse('challenge:results', args=(Challenge.id,)))

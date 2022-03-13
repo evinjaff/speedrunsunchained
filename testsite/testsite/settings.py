@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-+-ljybyp_hx^3p5qj1wnfhj@6tc)&q0*x#v(*a0d%ao2cv!+7_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
 
 
 # Application definition
@@ -51,6 +51,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'testsite.urls'
+
+APPEND_SLASH=True
 
 TEMPLATES = [
     {
