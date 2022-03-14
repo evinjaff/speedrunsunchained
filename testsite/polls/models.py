@@ -57,4 +57,6 @@ class Challenge(models.Model):
 		return self.downvotes > self.upvotes
 
 	def get_absolute_url(self):
+		print("called get_absolute_url")
+		print('pk: {} chal: {}'.format(self.pk, self.chal))
 		return reverse('polls:custom_page', kwargs={'pk': self.pk, 'chal': self.chal})

@@ -3,6 +3,7 @@
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
 <form action="add_chal" method="post">
+    {% csrf_token %}
     <input type="submit" value="Add Challenge">
 </form>
 

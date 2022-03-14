@@ -70,6 +70,7 @@ class ChallengeCreateView(CreateView):
 	'challenge_title',
 	'challenge_description',
 	'difficulty', 
+    'game_sub_id'
     ]
 
     def get_initial(self, *args, **kwargs):
@@ -80,12 +81,12 @@ class ChallengeCreateView(CreateView):
     def form_valid(self, form):
         print('form_valid called')
         form.instance.user = self.request.user
-        return super(GameCreateView, self).form_valid(form)
+        return super(ChallengeCreateView, self).form_valid(form)
 
     def form_invalid(self, form):
         print('form_invalid called')
         response = super().form_invalid(form)
-        return super(GameCreateView, self).form_invalid(form)
+        return super(ChallengeCreateView, self).form_invalid(form)
 
 
 

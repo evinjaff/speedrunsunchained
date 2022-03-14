@@ -2,8 +2,6 @@
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<!--books/templates/books/book-create.html-->
-
 <form action="."  enctype="multipart/form-data" method="POST">
 
     {% csrf_token %}
@@ -12,4 +10,4 @@
     
    
     <button type="submit">SUBMIT</button>
-    </form>
+</form>
