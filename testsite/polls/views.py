@@ -63,6 +63,31 @@ class GameCreateView(CreateView):
         return super(GameCreateView, self).form_invalid(form)
 
 
+class ChallengeCreateView(CreateView):
+    model = Challenge
+    fields = [
+    'game',
+	'challenge_title',
+	'challenge_description',
+	'difficulty', 
+    ]
+
+    def get_initial(self, *args, **kwargs):
+        initial = super().get_initial(**kwargs)
+        initial['challenge_title'] = 'Enter Game Title'
+        return initial
+
+    def form_valid(self, form):
+        print('form_valid called')
+        form.instance.user = self.request.user
+        return super(GameCreateView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        print('form_invalid called')
+        response = super().form_invalid(form)
+        return super(GameCreateView, self).form_invalid(form)
+
+
 
 
 class ChallengeView(generic.DetailView):

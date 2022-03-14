@@ -2,6 +2,10 @@
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
+<form action="add_chal" method="post">
+    <input type="submit" value="Add Challenge">
+</form>
+
 <form action="{% url 'polls:vote' game.id %}" method="post">
 {% csrf_token %}
 <!-- {% for challenge in game.challenge_set.all %}
