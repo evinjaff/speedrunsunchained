@@ -129,25 +129,31 @@ io.sockets.on("connection", function (socket) {
         
         //BEHOLD THE MAGIC SQL QUERIES THAT DO IT
         
-        let consolearr = [];
-        //Force this blocking function because I can't get async to work
-        let flip = true;
-        //while(flip){
+        let consoleset = new Set();
+        let titlearr = [];
+        
+        //TODO: In the future, this query should dynamically scale with inputted filters
 
-            db.serialize(() => {
-                db.each(`SELECT game_title FROM polls_game`, (err, row) => {
-                  if (err) {
-                    console.error(err.message);
-                  }
-                  console.log(row.game_title);
-                  consolearr[consolearr.length] = row.game_title;
-                }, (err, row) => {
-                    socket.emit("setup_filters_callback", {"console": consolearr})
+
+        db.serialize(() => {
+            db.each(`SELECT * FROM polls_game`, (err, row) => {
+                if (err) {
+                console.error(err.message);
                 }
-                );
-            });
 
-        //}
+                consoleset.add(row.console);
+                titlearr[titlearr.length]       = row.game_title;
+
+
+            }, (err, row) => {
+
+                console.log(consoleset);
+
+                socket.emit("setup_filters_callback", { "game_title": titlearr , "console": Array.from(consoleset)})
+            }
+            );
+        });
+
 
 
 
