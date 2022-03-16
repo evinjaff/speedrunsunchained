@@ -1,3 +1,4 @@
+from enum import unique
 from mimetypes import init
 from .models import Game
 from .forms import AddGame
@@ -94,7 +95,13 @@ class ChallengeCreateView(CreateView):
 
         print("Game: ", form.instance.game)
 
-        print(Challenge.objects.filter(game=form.instance.game))
+        self.pk = Game.objects.filter(game_title=form.instance.game.game_title)[0].id
+
+        self.unique_challenge_id = len(Challenge.objects.filter(game=form.instance.game)) + 1
+
+        print("pk {} chal: {}".format(self.pk, self.unique_challenge_id))
+
+        form.instance.game_sub_id = self.unique_challenge_id
 
         form.instance.user = self.request.user
         return super(ChallengeCreateView, self).form_valid(form)
@@ -116,10 +123,10 @@ class ChallengeView(generic.DetailView):
 
     def custom_page(request, pk, chal):
         #use in view func or pass to template via context
-        print("pk {} chal: {}".format(pk, chal))
-        print("request {}".format(request))
+        # print("pk {} chal: {}".format(pk, chal))
+        # print("request {}".format(request))
         queried = Challenge.objects.filter(game_id=pk).filter(game_sub_id=chal)
-        print(queried)
+        # print(queried)
         context = {"gameid": pk, "challengeid": chal, "challenge": queried[0]}
         return render(request, 'polls/challenge.html', context=context)
 
