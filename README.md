@@ -1,9 +1,9 @@
 # speedrunsunchained
-Django app for my speedrun game idea
+ 
+This a rough prototype of my speedrun game idea.
 
+I built the community application in Django with a SQLite database. The game application integrates with the SQLite databse from the Django app, and is queryable via Node.js on that side. In order to protect from SQL injection, the database commands are executed on a Node.js server, and the data is tramsitted upon request to the client via socket.io.
 
-Note to future evin:
+## My Vision: Dual Community - Game Feedback Loop
 
-When you can't figure out how to read the community databse, look back to this:
-
-https://stackoverflow.com/questions/62864483/read-sqlite-database-with-node-js
+[An image is to here soon]
