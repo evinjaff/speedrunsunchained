@@ -24,21 +24,28 @@ const master = "master.html";
 const sqlite3 = require('sqlite3').verbose();
 const { open } = require('sqlite');
 
-// let db = new sqlite3.Database('../testsite/db.sqlite3', (err) => {
-//     if (err) {
-//       console.error(err.message);
-//     }
-//     console.log('Connected to the Database.');
-//   });
+let db = new sqlite3.Database('../testsite/db.sqlite3', (err) => {
+    if (err) {
+      console.error(err.message);
+    }
+    console.log('Connected to the Database.');
+  });
 
-const ordersDb = createDbConnection('../testsite/db.sqlite3');
+// let db = {};
 
-function createDbConnection(filename) {
-    return open({
-        filename,
-        driver: sqlite3.Database
-    });
-}
+// (async () => {
+//     // open the database
+//     let dbb = await open({
+//       filename: '../testsite/db.sqlite3',
+//       driver: sqlite3.Database
+//     })
+
+//     db = dbb;
+
+//     console.log("DB Opened!");
+// })()
+
+
 
 // Listen for HTTP connections.  This is essentially a miniature static file server that only serves our one file, client.html, on port 3456:
 const server = http.createServer(function (req, resp) {
@@ -122,7 +129,33 @@ io.sockets.on("connection", function (socket) {
         
         //BEHOLD THE MAGIC SQL QUERIES THAT DO IT
         
-        const orderProcessed = orderAlreadyProcessed(ordersDb);
+        let consolearr = [];
+        //Force this blocking function because I can't get async to work
+        let flip = true;
+        //while(flip){
+
+            db.serialize(() => {
+                db.each(`SELECT game_title FROM polls_game`, (err, row) => {
+                  if (err) {
+                    console.error(err.message);
+                  }
+                  console.log(row.game_title);
+                  consolearr[consolearr.length] = row.game_title;
+                }, (err, row) => {
+                    socket.emit("setup_filters_callback", {"console": consolearr})
+                }
+                );
+            });
+
+        //}
+
+
+
+        
+
+
+
+
     });
 
 
@@ -131,19 +164,5 @@ io.sockets.on("connection", function (socket) {
 });
 
 
-async function orderAlreadyProcessed(ordersDb) {
-    try {
-        console.log('Starting orderAlreadyProcessed function');
-        const query = 'SELECT game_title FROM polls_game'
-        const row = await ordersDb.get(query);
-        console.log('Row with count =', row);
 
-        socket.emit("setup_filters_callback", {"data": row})
-        
-        
-        return row;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
+

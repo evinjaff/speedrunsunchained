@@ -44,11 +44,13 @@ function setup(){
 //Construct the DOM with the info from the server
 socketio.on("setup_filters_callback", function (data) {
 
+    console.log(data);
+
     globaldebug = data;
 
-    data['gameconsole'].forEach(element => {
-        console.log(element);
-    });
+    // data['gameconsole'].forEach(element => {
+    //     console.log(element);
+    // });
 });
 
 
