@@ -129,14 +129,18 @@ io.sockets.on("connection", function (socket) {
         
         //BEHOLD THE MAGIC SQL QUERIES THAT DO IT
         
+        //Using a Set where duplicates are likely (i.e consoles, release year, etc.)
         let consoleset = new Set();
         let titlearr = [];
         
-        //TODO: In the future, this query should dynamically scale with inputted filters
+        //TODO: In the future, this query should dynamically return queries with inputted filters
 
 
         db.serialize(() => {
-            db.each(`SELECT * FROM polls_game`, (err, row) => {
+
+            query = `SELECT * FROM polls_game`
+
+            db.each(query, (err, row) => {
                 if (err) {
                 console.error(err.message);
                 }
