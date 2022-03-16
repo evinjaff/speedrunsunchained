@@ -22,13 +22,23 @@ const master = "master.html";
 /* Database Setup */
 
 const sqlite3 = require('sqlite3').verbose();
+const { open } = require('sqlite');
 
-let db = new sqlite3.Database('../testsite/db.sqlite3', (err) => {
-    if (err) {
-      console.error(err.message);
-    }
-    console.log('Connected to the Database.');
-  });
+// let db = new sqlite3.Database('../testsite/db.sqlite3', (err) => {
+//     if (err) {
+//       console.error(err.message);
+//     }
+//     console.log('Connected to the Database.');
+//   });
+
+const ordersDb = createDbConnection('../testsite/db.sqlite3');
+
+function createDbConnection(filename) {
+    return open({
+        filename,
+        driver: sqlite3.Database
+    });
+}
 
 // Listen for HTTP connections.  This is essentially a miniature static file server that only serves our one file, client.html, on port 3456:
 const server = http.createServer(function (req, resp) {
@@ -99,21 +109,20 @@ const io = socketio.listen(server);
 io.sockets.on("connection", function (socket) {
 
 
-    // Client Callbacks
-    /* 
-        message_to_server: Hello World Test
-        sendcoord: Send the results of a compass click
-    */
+   // Basic ping callback
     socket.on('ping_server', function (data) {
-        // Basic ping callback
+        
         console.log( socket.id, "pinged server");
     });
 
-    socket.on('message_to_server', function (data) {
-        // This callback runs when the server receives a new message from the client.
-
-        console.log("message: " + data["message"]); // log it to the Node.JS output
-        io.sockets.emit("message_to_client", { message: data["message"] }) // broadcast the message to other users
+    // This callback runs when the client needs to figure out how to construct metadata filters
+    //TODO: Deprecate this, and make it dynamic. It's also not very optimized, but someone else will fix that
+    //if this ever becomes big
+    socket.on('setup_filters', function (data) {
+        
+        //BEHOLD THE MAGIC SQL QUERIES THAT DO IT
+        
+        const orderProcessed = orderAlreadyProcessed(ordersDb);
     });
 
 
@@ -121,3 +130,20 @@ io.sockets.on("connection", function (socket) {
 
 });
 
+
+async function orderAlreadyProcessed(ordersDb) {
+    try {
+        console.log('Starting orderAlreadyProcessed function');
+        const query = 'SELECT game_title FROM polls_game'
+        const row = await ordersDb.get(query);
+        console.log('Row with count =', row);
+
+        socket.emit("setup_filters_callback", {"data": row})
+        
+        
+        return row;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
