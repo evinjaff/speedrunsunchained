@@ -48,6 +48,7 @@ class GameCreateView(CreateView):
     ]
 
     def get_initial(self, *args, **kwargs):
+        print('get_initial called')
         initial = super().get_initial(**kwargs)
         initial['game_title'] = 'Enter Game Title'
         return initial
@@ -69,17 +70,32 @@ class ChallengeCreateView(CreateView):
     'game',
 	'challenge_title',
 	'challenge_description',
-	'difficulty', 
-    'game_sub_id'
+	'difficulty'
     ]
 
+    pk = 1
+
+    unique_challenge_id = 1
+
+    def get_success_url(self):
+         print('get_success_url called')
+         return reverse('polls:challenge-add', kwargs={'pk': self.pk, 'chal': self.unique_challenge_id})
+
     def get_initial(self, *args, **kwargs):
+        print('get_initial called')
         initial = super().get_initial(**kwargs)
         initial['challenge_title'] = 'Enter Game Title'
         return initial
 
     def form_valid(self, form):
         print('form_valid called')
+
+        Challenge.objects.filter(game_id=form.instance.game)
+
+        print("Game: ", form.instance.game)
+
+        print(Challenge.objects.filter(game=form.instance.game))
+
         form.instance.user = self.request.user
         return super(ChallengeCreateView, self).form_valid(form)
 
