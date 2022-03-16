@@ -135,3 +135,5 @@ testsite/polls/static/.DS_Store
 testsite/uploaded_files/
 
 .vscode/
+
+game/node_modules/

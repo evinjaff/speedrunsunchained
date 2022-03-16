@@ -1,0 +1,26 @@
+{
+  "name": "axisgame",
+  "version": "1.0.0",
+  "description": "",
+  "main": "node_server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "node node_server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evinjaff/axisgame.git"
+  },
+  "author": "evinjaff",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/evinjaff/axisgame/issues"
+  },
+  "homepage": "https://github.com/evinjaff/axisgame#readme",
+  "dependencies": {
+    "http": "^0.0.1-security",
+    "mime": "^3.0.0",
+    "socket.io": "^4.4.0",
+    "sqlite3": "^5.0.2"
+  }
+}
