@@ -133,3 +133,5 @@ testsite/polls/static/.DS_Store
 .DS_Store
 
 testsite/uploaded_files/
+
+.vscode/
