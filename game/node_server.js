@@ -8,12 +8,14 @@
 
 const http = require("http"),
     fs = require("fs"),
-	url = require('url'),
-	path = require('path'),
-	mime = require('mime');
-	
+    url = require('url'),
+    path = require('path'),
+    mime = require('mime');
 
-const { isGeneratorFunction } = require("util/types");
+
+const {
+    isGeneratorFunction
+} = require("util/types");
 
 const port = 3456;
 const file = "client.html";
@@ -22,14 +24,17 @@ const master = "master.html";
 /* Database Setup */
 
 const sqlite3 = require('sqlite3').verbose();
-const { open } = require('sqlite');
+const {
+    open
+} = require('sqlite');
+const { count } = require("console");
 
-let db = new sqlite3.Database('../testsite/db.sqlite3', (err) => {
+let db = new sqlite3.Database('../community/db.sqlite3', (err) => {
     if (err) {
-      console.error(err.message);
+        console.error(err.message);
     }
     console.log('Connected to the Database.');
-  });
+});
 
 // let db = {};
 
@@ -60,38 +65,38 @@ const server = http.createServer(function (req, resp) {
     // });
 
     var filename = path.join(__dirname, "", url.parse(req.url).pathname);
-	(fs.exists || path.exists)(filename, function(exists){
-		if (exists) {
-			fs.readFile(filename, function(err, data){
-				if (err) {
-					// File exists but is not readable (permissions issue?)
-					resp.writeHead(500, {
-						"Content-Type": "text/plain"
-					});
-					resp.write("Internal server error: could not read file");
-					resp.end();
-					return;
-				}
-				
-				// File exists and is readable
-				var mimetype = mime.getType(filename);
-				resp.writeHead(200, {
-					"Content-Type": mimetype
-				});
-				resp.write(data);
-				resp.end();
-				return;
-			});
-		}else{
-			// File does not exist
-			resp.writeHead(404, {
-				"Content-Type": "text/plain"
-			});
-			resp.write("Requested file not found: "+filename);
-			resp.end();
-			return;
-		}
-	});
+    (fs.exists || path.exists)(filename, function (exists) {
+        if (exists) {
+            fs.readFile(filename, function (err, data) {
+                if (err) {
+                    // File exists but is not readable (permissions issue?)
+                    resp.writeHead(500, {
+                        "Content-Type": "text/plain"
+                    });
+                    resp.write("Internal server error: could not read file");
+                    resp.end();
+                    return;
+                }
+
+                // File exists and is readable
+                var mimetype = mime.getType(filename);
+                resp.writeHead(200, {
+                    "Content-Type": mimetype
+                });
+                resp.write(data);
+                resp.end();
+                return;
+            });
+        } else {
+            // File does not exist
+            resp.writeHead(404, {
+                "Content-Type": "text/plain"
+            });
+            resp.write("Requested file not found: " + filename);
+            resp.end();
+            return;
+        }
+    });
 
 
 });
@@ -116,52 +121,205 @@ const io = socketio.listen(server);
 io.sockets.on("connection", function (socket) {
 
 
-   // Basic ping callback
+    // Basic ping callback
     socket.on('ping_server', function (data) {
-        
-        console.log( socket.id, "pinged server");
+
+        console.log(socket.id, "pinged server");
     });
 
     // This callback runs when the client needs to figure out how to construct metadata filters
     //TODO: Deprecate this, and make it dynamic. It's also not very optimized, but someone else will fix that
     //if this ever becomes big
     socket.on('setup_filters', function (data) {
-        
-        //BEHOLD THE MAGIC SQL QUERIES THAT DO IT
-        
+
+        //Setup case
+
+
         //Using a Set where duplicates are likely (i.e consoles, release year, etc.)
+        //Using an array where duplicates are unlikely
         let consoleset = new Set();
+        let yearset = new Set();
+        let genreset = new Set();
         let titlearr = [];
-        
-        //TODO: In the future, this query should dynamically return queries with inputted filters
+
+        console.log(data)
 
 
-        db.serialize(() => {
+        if (data["isEmpty"] == true) {
+            console.log("Init Empty")
+            //BEHOLD THE MAGIC SQL QUERIES THAT DO IT
 
-            query = `SELECT * FROM polls_game`
+            //TODO: In the future, this query should dynamically return queries with inputted filters
+            db.serialize(() => {
 
-            db.each(query, (err, row) => {
-                if (err) {
-                console.error(err.message);
+                query = `SELECT * FROM polls_game`
+
+                db.each(query, (err, row) => {
+                    if (err) {
+                        console.error(err.message);
+                    }
+
+                    consoleset.add(row.console);
+                    yearset.add(row.year_published);
+                    genreset.add(row.genre);
+                    titlearr[titlearr.length] = row.game_title;
+
+
+
+                }, (err, row) => {
+
+                    //Polish and send data back
+
+                    let custom_sorted_console = Array.from(consoleset).sort(function (a, b) {
+                        let wordToBeLast = 'N/A'; // set your word here
+
+                        if (a === wordToBeLast) {
+                            return -1;
+                        } else if (b === wordToBeLast) {
+                            return 1;
+                        } else {
+                            return a > b;
+                        }
+                    });
+
+                    let custom_sorted_genre = Array.from(genreset).sort(function (a, b) {
+                        let wordToBeLast = 'N/A';
+
+                        //if it starts with a number
+                        if (!isNaN(a[0])) {
+                            return -1;
+                        } else if (!isNaN(b[0])) {
+                            return 1;
+                        }
+
+                        if (a === wordToBeLast) {
+                            return -1;
+                        } else if (b === wordToBeLast) {
+                            return 1;
+                        } else {
+                            return a > b;
+                        }
+                    })
+
+                    console.log(custom_sorted_genre)
+
+                    socket.emit("setup_filters_callback", {
+                        "game_title": titlearr.sort(),
+                        "console": custom_sorted_console,
+                        "year": Array.from(yearset).sort(),
+                        "genre": custom_sorted_genre
+                    })
+                });
+            });
+
+
+
+
+        }
+
+        //Special case. Do the special queries from game submission
+        else
+
+        {
+            let counter = 0;
+
+            db.serialize(() => {
+
+                query = `SELECT * FROM polls_game WHERE `
+
+                //TODO: add SQL injection protection
+
+                for (let key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        if (key !== "isEmpty") {
+
+                            //If multiple params
+                            if (!isNaN(data[key].length)) {
+                                data[key].forEach(perdatakey => {
+                                    console.log(perdatakey)
+                                    query += key + "='" + perdatakey + "' OR ";
+                                });
+
+                                //query = query.slice(0, query.length -);
+                            }
+                            else{
+                                query += key + "=" + data[key] + " AND ";
+                            }
+
+                        }
+                    }
                 }
 
-                consoleset.add(row.console);
-                titlearr[titlearr.length]       = row.game_title;
+                //slice out trailing AND
+                query = query.slice(0, query.length - 4)
 
-
-            }, (err, row) => {
-
-                console.log(consoleset);
-
-                socket.emit("setup_filters_callback", { "game_title": titlearr , "console": Array.from(consoleset)})
-            }
-            );
-        });
+                console.log("Query: " + query);
 
 
 
+                db.each(query, (err, row) => {
+                    if (err) {
+                        console.error(err.message);
+                    }
 
-        
+                    consoleset.add(row.console);
+                    yearset.add(row.year_published);
+                    genreset.add(row.genre);
+                    titlearr[titlearr.length] = row.game_title;
+
+                    counter++;
+
+
+
+                }, (err, row) => {
+
+                    //Polish and send data back
+
+                    let custom_sorted_console = Array.from(consoleset).sort(function (a, b) {
+                        let wordToBeLast = 'N/A'; // set your word here
+
+                        if (a === wordToBeLast) {
+                            return -1;
+                        } else if (b === wordToBeLast) {
+                            return 1;
+                        } else {
+                            return a > b;
+                        }
+                    });
+
+                    let custom_sorted_genre = Array.from(genreset).sort(function (a, b) {
+                        let wordToBeLast = 'N/A';
+
+                        //if it starts with a number
+                        if (!isNaN(a[0])) {
+                            return -1;
+                        } else if (!isNaN(b[0])) {
+                            return 1;
+                        }
+
+                        if (a === wordToBeLast) {
+                            return -1;
+                        } else if (b === wordToBeLast) {
+                            return 1;
+                        } else {
+                            return a > b;
+                        }
+                    })
+
+                    console.log(custom_sorted_genre)
+
+                    socket.emit("setup_filters_callback", {
+                        "game_title": titlearr.sort(),
+                        "console": custom_sorted_console,
+                        "year": Array.from(yearset).sort(),
+                        "genre": custom_sorted_genre,
+                        "found_games": counter,
+                        "found_challenges": 0,
+                    })
+                });
+            });
+
+        }
 
 
 
@@ -169,10 +327,6 @@ io.sockets.on("connection", function (socket) {
     });
 
 
-    
+
 
 });
-
-
-
-
