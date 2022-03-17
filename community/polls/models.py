@@ -43,6 +43,7 @@ class Challenge(models.Model):
 	upvotes = models.IntegerField(default=0)
 	downvotes = models.IntegerField(default=0)
 	difficulty = models.IntegerField(default=0)
+	duration = models.CharField(default="N/A", max_length=20)
 	commentblob = models.TextField(default="Automod; 'Remember, no hate '\n Automod: 'Remember, be on-topic' ", max_length=400)
 
 	

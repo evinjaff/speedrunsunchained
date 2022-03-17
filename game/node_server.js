@@ -27,7 +27,9 @@ const sqlite3 = require('sqlite3').verbose();
 const {
     open
 } = require('sqlite');
-const { count } = require("console");
+const {
+    count
+} = require("console");
 
 let db = new sqlite3.Database('../community/db.sqlite3', (err) => {
     if (err) {
@@ -137,6 +139,7 @@ io.sockets.on("connection", function (socket) {
 
         //Using a Set where duplicates are likely (i.e consoles, release year, etc.)
         //Using an array where duplicates are unlikely
+        let chal_duration_set = new Set();
         let consoleset = new Set();
         let yearset = new Set();
         let genreset = new Set();
@@ -210,6 +213,32 @@ io.sockets.on("connection", function (socket) {
                         "genre": custom_sorted_genre
                     })
                 });
+
+                //Get Challenges here
+
+                chal_query = `SELECT * FROM polls_challenge`
+
+                db.each(chal_query, (err, row) => {
+                    if (err) {
+                        console.error(err.message);
+                    }
+
+                    console.log(row);
+
+                    chal_duration_set.add(row.duration);
+
+
+
+                }, (err, row) => {
+
+                    //Polish and send data back
+
+
+                    socket.emit("setup_challenge_callback", {
+                        "duration": Array.from(chal_duration_set).sort()
+                    })
+                });
+
             });
 
 
@@ -246,7 +275,7 @@ io.sockets.on("connection", function (socket) {
                                 data[key].forEach(perdatakey => {
                                     let inskey = perdatakey
 
-                                    if(isNaN(perdatakey)){
+                                    if (isNaN(perdatakey)) {
                                         perdatakey = "'" + perdatakey + "'"
                                     }
 
@@ -254,23 +283,22 @@ io.sockets.on("connection", function (socket) {
                                     query += lookup_key(key) + "='" + inskey + "' OR ";
                                 });
 
-                                query = query.slice(0, query.length-4)
-                                
+                                query = query.slice(0, query.length - 4)
+
                                 query += ") AND ";
 
-                                
-                            }
-                            else{
+
+                            } else {
 
                                 //numeric vs string filtering
 
                                 let inskey = data[key]
 
-                                if(isNaN(inskey)){
+                                if (isNaN(inskey)) {
                                     inskey = "'" + inskey + "'"
                                 }
 
-                                query += lookup_key(key)  + "=" + inskey + " AND ";
+                                query += lookup_key(key) + "=" + inskey + " AND ";
 
                             }
 
@@ -359,9 +387,9 @@ io.sockets.on("connection", function (socket) {
 
 });
 
-function lookup_key(key){
+function lookup_key(key) {
 
-    switch(key){
+    switch (key) {
         case 'year':
             return 'year_published';
         case 'title':
