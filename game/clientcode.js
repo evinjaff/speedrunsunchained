@@ -40,13 +40,38 @@ function setup(){
     socketio.emit("setup_filters", {"isEmpty": true});
 }
 
+//This function takes the data from the form and generates queries to update the game filter.
 function filter_games(){
 
+    let socketdata = {"isEmpty": true}
 
+    let year = document.getElementById("selectmultiple_year")
 
+    let year_selects = getSelectValues(year);
 
+    //TODO: Make this reusable
 
-    let socketdata = {"year_published": 1986, "console": ["NES", "SNES"], "isEmpty": false}
+    //Don't pass a field in
+    if(year_selects.length == 0 || year_selects.length == undefined){
+        // Do nothing
+    }
+    else if (year_selects.length == 1){
+        //pass in a single value
+        socketdata.year_published = year_selects[0];
+        socketdata.isEmpty = false;
+
+    }
+    else{
+        //pass in multiple values
+        socketdata.year_published = [];
+        year_selects.forEach(select => {
+            socketdata.year_published.push(select);
+            socketdata.isEmpty = false;
+        })
+    }
+
+    console.log(socketdata)
+    //socketdata = {"year_published": 1986, "console": ["NES", "SNES"], "isEmpty": false}
 
     socketio.emit("setup_filters", socketdata);
 }
