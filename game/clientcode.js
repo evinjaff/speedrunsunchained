@@ -45,36 +45,44 @@ function filter_games(){
 
     let socketdata = {"isEmpty": true}
 
-    let year = document.getElementById("selectmultiple_year")
-
-    let year_selects = getSelectValues(year);
-
-    //TODO: Make this reusable
-
-    //Don't pass a field in
-    if(year_selects.length == 0 || year_selects.length == undefined){
-        // Do nothing
-    }
-    else if (year_selects.length == 1){
-        //pass in a single value
-        socketdata.year_published = year_selects[0];
-        socketdata.isEmpty = false;
-
-    }
-    else{
-        //pass in multiple values
-        socketdata.year_published = [];
-        year_selects.forEach(select => {
-            socketdata.year_published.push(select);
-            socketdata.isEmpty = false;
-        })
-    }
+    socketdata = reusable_query_getter("genre" , "selectmultiple_genre", socketdata);
+    socketdata = reusable_query_getter("year", "selectmultiple_year", socketdata);
+    socketdata = reusable_query_getter("console", "selectmultiple_console", socketdata);
 
     console.log(socketdata)
     //socketdata = {"year_published": 1986, "console": ["NES", "SNES"], "isEmpty": false}
 
     socketio.emit("setup_filters", socketdata);
 }
+
+function reusable_query_getter(attribute_JSON_field, attribute_HTML_id, passthrough_socketdata){
+
+    let year = document.getElementById(attribute_HTML_id)
+
+    let attibute_selects = getSelectValues(year);
+
+    //Don't pass a field in
+    if(attibute_selects.length == 0 || attibute_selects.length == undefined){
+        // Do nothing
+    }
+    else if (attibute_selects.length == 1){
+        //pass in a single value
+        passthrough_socketdata[attribute_JSON_field] = attibute_selects[0];
+        passthrough_socketdata.isEmpty = false;
+
+    }
+    else{
+        //pass in multiple values
+        socketdata.year_published = [];
+        attibute_selects.forEach(select => {
+            passthrough_socketdata[attribute_JSON_field].push(select);
+            passthrough_socketdata.isEmpty = false;
+        })
+    }
+
+    return passthrough_socketdata;
+}
+
 
 //utility function to retun array from select values
 function getSelectValues(select) {

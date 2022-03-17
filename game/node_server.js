@@ -229,21 +229,41 @@ io.sockets.on("connection", function (socket) {
 
                 //TODO: add SQL injection protection
 
+                //Expected:  SELECT * FROM polls_game WHERE genre='Adventure' AND year_published=1986 AND console='NES'
+                //Actual:    SELECT * FROM polls_game WHERE genre=Adventure AND year=1986 AND console=NES 
+
+
                 for (let key in data) {
                     if (data.hasOwnProperty(key)) {
                         if (key !== "isEmpty") {
 
                             //If multiple params
-                            if (!isNaN(data[key].length)) {
+                            if (Array.isArray(data[key])) {
+                                //console.log(data[key]);
                                 data[key].forEach(perdatakey => {
-                                    console.log(perdatakey)
-                                    query += key + "='" + perdatakey + "' OR ";
+                                    let inskey = perdatakey
+
+                                    if(isNaN(perdatakey)){
+                                        perdatakey = "'" + perdatakey + "'"
+                                    }
+
+
+                                    query += lookup_key(key) + "='" + inskey + "' OR ";
                                 });
 
                                 //query = query.slice(0, query.length -);
                             }
                             else{
-                                query += key + "=" + data[key] + " AND ";
+
+                                //numeric vs string filtering
+
+                                let inskey = data[key]
+
+                                if(isNaN(inskey)){
+                                    inskey = "'" + inskey + "'"
+                                }
+
+                                query += lookup_key(key)  + "=" + inskey + " AND ";
                             }
 
                         }
@@ -330,3 +350,15 @@ io.sockets.on("connection", function (socket) {
 
 
 });
+
+function lookup_key(key){
+
+    switch(key){
+        case 'year':
+            return 'year_published';
+        case 'title':
+            return 'game_title';
+        default:
+            return key;
+    }
+}
