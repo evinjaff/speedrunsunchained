@@ -42,10 +42,30 @@ function setup(){
 
 function filter_games(){
 
+
+
+
+
     let socketdata = {"year_published": 1986, "console": ["NES", "SNES"], "isEmpty": false}
 
     socketio.emit("setup_filters", socketdata);
 }
+
+//utility function to retun array from select values
+function getSelectValues(select) {
+    var result = [];
+    var options = select && select.options;
+    var opt;
+  
+    for (var i=0, iLen=options.length; i<iLen; i++) {
+      opt = options[i];
+  
+      if (opt.selected) {
+        result.push(opt.value || opt.text);
+      }
+    }
+    return result;
+  }
 
 
 //Construct the DOM with the info from the server
