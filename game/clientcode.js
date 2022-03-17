@@ -4,6 +4,9 @@ var socketio = io.connect();
 
 let globaldebug;
 
+//TODO: Stash the last queried blob to prevent slamming the server
+
+
 class Game {
 
     
@@ -73,7 +76,7 @@ function reusable_query_getter(attribute_JSON_field, attribute_HTML_id, passthro
     }
     else{
         //pass in multiple values
-        socketdata.year_published = [];
+        passthrough_socketdata[attribute_JSON_field] = [];
         attibute_selects.forEach(select => {
             passthrough_socketdata[attribute_JSON_field].push(select);
             passthrough_socketdata.isEmpty = false;

@@ -229,8 +229,8 @@ io.sockets.on("connection", function (socket) {
 
                 //TODO: add SQL injection protection
 
-                //Expected:  SELECT * FROM polls_game WHERE genre='Adventure' AND year_published=1986 AND console='NES'
-                //Actual:    SELECT * FROM polls_game WHERE genre=Adventure AND year=1986 AND console=NES 
+                //Expected:  SELECT * FROM polls_game WHERE (genre='Adventure' OR genre='3D Platformer') AND (year_published='1986' OR year_published='1988' OR year_published='1996' ) AND (console='NES' OR console='SNES' OR console='Nintendo 64')
+                //Actual:    SELECT * FROM polls_game WHERE genre='Adventure' OR genre='Platformer' OR year_published='1986' OR year_published='1988' OR year_published='1995' OR console='NES' OR console='SNES' OR console='Nintendo 64'
 
 
                 for (let key in data) {
@@ -239,6 +239,9 @@ io.sockets.on("connection", function (socket) {
 
                             //If multiple params
                             if (Array.isArray(data[key])) {
+
+                                query += "(";
+
                                 //console.log(data[key]);
                                 data[key].forEach(perdatakey => {
                                     let inskey = perdatakey
@@ -251,7 +254,11 @@ io.sockets.on("connection", function (socket) {
                                     query += lookup_key(key) + "='" + inskey + "' OR ";
                                 });
 
-                                //query = query.slice(0, query.length -);
+                                query = query.slice(0, query.length-4)
+                                
+                                query += ") AND ";
+
+                                
                             }
                             else{
 
@@ -264,6 +271,7 @@ io.sockets.on("connection", function (socket) {
                                 }
 
                                 query += lookup_key(key)  + "=" + inskey + " AND ";
+
                             }
 
                         }
