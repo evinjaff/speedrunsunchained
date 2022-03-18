@@ -144,6 +144,7 @@ io.sockets.on("connection", function (socket) {
         let yearset = new Set();
         let genreset = new Set();
         let titlearr = [];
+        let game_id_array = [];
 
         console.log(data)
 
@@ -162,10 +163,13 @@ io.sockets.on("connection", function (socket) {
                         console.error(err.message);
                     }
 
+                    //console.log(row)
+
                     consoleset.add(row.console);
                     yearset.add(row.year_published);
                     genreset.add(row.genre);
                     titlearr[titlearr.length] = row.game_title;
+                    game_id_array[game_id_array.length] = row.id;
 
 
 
@@ -204,7 +208,7 @@ io.sockets.on("connection", function (socket) {
                         }
                     })
 
-                    console.log(custom_sorted_genre)
+                    //console.log(custom_sorted_genre)
 
                     socket.emit("setup_filters_callback", {
                         "game_title": titlearr.sort(),
@@ -216,14 +220,24 @@ io.sockets.on("connection", function (socket) {
 
                 //Get Challenges here
 
+                //Notes to Evin for how to write this. Basically since we're working with 
+                //raw SQLite with no sexy Python, the way that this has to work, is that 
+                //we need to stash the relevant games from the top query (specifically their id)
+                // and then the foreign key will have the game we need
+                // So then our query just looks like
+                // SELECT * FROM polls_challenge WHERE game_id=1 OR game_id=2 OR game_id=3..
+
+                //console.log("Game id to work with: ", game_id_array);
                 chal_query = `SELECT * FROM polls_challenge`
+
+                console.log("Game id to work with: ", game_id_array);
 
                 db.each(chal_query, (err, row) => {
                     if (err) {
                         console.error(err.message);
                     }
 
-                    console.log(row);
+                    //console.log(row);
 
                     chal_duration_set.add(row.duration);
 
@@ -322,6 +336,8 @@ io.sockets.on("connection", function (socket) {
                     yearset.add(row.year_published);
                     genreset.add(row.genre);
                     titlearr[titlearr.length] = row.game_title;
+                    game_id_array[game_id_array.length] = row.id;
+                    console.log("game_id_array: ", game_id_array)
 
                     counter++;
 
@@ -364,6 +380,10 @@ io.sockets.on("connection", function (socket) {
 
                     console.log(custom_sorted_genre)
 
+                    
+
+                    
+
                     socket.emit("setup_filters_callback", {
                         "game_title": titlearr.sort(),
                         "console": custom_sorted_console,
@@ -372,7 +392,57 @@ io.sockets.on("connection", function (socket) {
                         "found_games": counter,
                         "found_challenges": 0,
                     })
+
+                     //Get Filtered Challenges here
+
+                //Notes to Evin for how to write this. Basically since we're working with 
+                //raw SQLite with no sexy Python, the way that this has to work, is that 
+                //we need to stash the relevant games from the top query (specifically their id)
+                // and then the foreign key will have the game we need
+                // So then our query just looks like
+                // SELECT * FROM polls_challenge WHERE game_id=1 OR game_id=2 OR game_id=3..
+
+                //console.log("Game id to work with: ", game_id_array);
+                chal_query = `SELECT * FROM polls_challenge WHERE `
+
+                
+
+                console.log("Game id to work with if false: ", game_id_array);
+
+                game_id_array.forEach(id => {
+                    chal_query += "game_id=" + id + " OR ";
                 });
+
+                chal_query = chal_query.slice(0, chal_query.length-3);
+
+                console.log("Query to execute: " + chal_query);
+
+                db.each(chal_query, (err, row) => {
+                    if (err) {
+                        console.error(err.message);
+                    }
+
+                    //console.log(row);
+
+                    chal_duration_set.add(row.duration);
+
+
+
+                }, (err, row) => {
+
+                    //Polish and send data back
+
+
+                    socket.emit("setup_challenge_callback", {
+                        "duration": Array.from(chal_duration_set).sort()
+                    })
+                });
+
+                });
+
+               
+
+
             });
 
         }
