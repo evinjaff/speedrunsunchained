@@ -65,6 +65,29 @@ function filter_games() {
     socketio.emit("setup_filters", socketdata);
 }
 
+//This function takes the data from the form and generates queries to update the game filter.
+function get_game_data() {
+
+
+    //If there's already queries being returned, let's keep going
+
+    let socketdata = {
+        "isEmpty": true
+    }
+
+    socketdata = reusable_query_getter("genre", "selectmultiple_genre", socketdata);
+    socketdata = reusable_query_getter("year", "selectmultiple_year", socketdata);
+    socketdata = reusable_query_getter("console", "selectmultiple_console", socketdata);
+    socketdata = reusable_query_getter("game", "selectmultiple_game", socketdata);
+    socketdata = reusable_query_getter("challenge_duration", "selectmultiple_challenge_duration", socketdata);
+
+    console.log(socketdata)
+
+    //Once this happens, we don't need websockets anymore -- yay!!
+    socketio.emit("get_game_filter", socketdata);
+}
+
+
 function reusable_query_getter(attribute_JSON_field, attribute_HTML_id, passthrough_socketdata) {
 
     let year = document.getElementById(attribute_HTML_id)
@@ -116,7 +139,6 @@ socketio.on("setup_filters_callback", function (data) {
 
     globaldebug = data;
 
-
     //Manage Quantity Tracker
     if (data['found_games'] != undefined) {
         document.getElementById("recordsfound").innerHTML = data['found_games'] + " games found";
@@ -130,21 +152,18 @@ socketio.on("setup_filters_callback", function (data) {
         document.getElementById("challengesfound").innerHTML = "";
     }
 
-
     //This handles Console callback
     form_refresh("selectmultiple_console", 'console', data);
 
     //This handles Game title callback
     form_refresh("selectmultiple_game", 'game_title', data);
 
-
     //This handles Year callback
     form_refresh("selectmultiple_year", 'year', data);
  
-
     //This handles Genre callback
     form_refresh("selectmultiple_genre", 'genre', data);
- 
+
 });
 
 socketio.on("setup_challenge_callback", function (data) {

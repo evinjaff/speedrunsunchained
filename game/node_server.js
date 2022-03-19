@@ -132,6 +132,7 @@ io.sockets.on("connection", function (socket) {
 
     // This callback runs when the client needs to figure out how to construct metadata filters
     //TODO: Deprecate this, and make it dynamic. It's also not very optimized, but someone else will fix that
+    // Eh we fixed this, but eventually we could refactor this for that *clean code*
     //if this ever becomes big
     socket.on('setup_filters', function (data) {
 
@@ -508,7 +509,16 @@ io.sockets.on("connection", function (socket) {
 
     });
 
+    socket.on('get_game_filter', function (data) {
+        //Here we go, final server function.
 
+        //Hopefully not a 400 line function like the last one
+
+
+
+    });
+
+    get_game_filter
 
 
 });
