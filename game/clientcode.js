@@ -191,7 +191,18 @@ socketio.on("setup_challenge_callback", function (data) {
 
 socketio.on("game_handoff_callback", function(data){
     alert("yay we can start the game");
+
+    //Invoke the game loop
+
     console.log(data);
+
+    //Make the form invisible
+    document.getElementById("form_part").style = "display: none;";
+    //Make it visible
+    document.getElementById("gamepart").style = "";
+
+    gameloop();
+    
 })
 
 
