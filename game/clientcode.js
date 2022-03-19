@@ -131,54 +131,20 @@ socketio.on("setup_filters_callback", function (data) {
     }
 
 
-
     //This handles Console callback
-    document.getElementById("selectmultiple_console").innerHTML = '';
-    data['console'].forEach(console => {
-        let childlabel = document.createElement("option");
-        childlabel.value = console
-        childlabel.innerHTML = console
-         
-        document.getElementById("selectmultiple_console").appendChild(childlabel)
-
-    })
+    form_refresh("selectmultiple_console", 'console', data);
 
     //This handles Game title callback
-    document.getElementById("selectmultiple_game").innerHTML = '';
-    data['game_title'].forEach(title => {
-        let childlabel = document.createElement("option");
-        childlabel.value = title
-        childlabel.innerHTML = title
-         
-        document.getElementById("selectmultiple_game").appendChild(childlabel)
+    form_refresh("selectmultiple_game", 'game_title', data);
 
-    })
 
     //This handles Year callback
-    document.getElementById("selectmultiple_year").innerHTML = '';
-    data['year'].forEach(year => {
-        let childlabel = document.createElement("option");
-        childlabel.value = year
-        childlabel.innerHTML = year
-         
-        document.getElementById("selectmultiple_year").appendChild(childlabel)
-
-    })
+    form_refresh("selectmultiple_year", 'year', data);
+ 
 
     //This handles Genre callback
-    document.getElementById("selectmultiple_genre").innerHTML = '';
-    data['genre'].forEach(year => {
-        let childlabel = document.createElement("option");
-        childlabel.value = year
-        childlabel.innerHTML = year
-         
-        document.getElementById("selectmultiple_genre").appendChild(childlabel)
-
-    })
-
-    // data['gameconsole'].forEach(element => {
-    //     console.log(element);
-    // });
+    form_refresh("selectmultiple_genre", 'genre', data);
+ 
 });
 
 socketio.on("setup_challenge_callback", function (data) {
@@ -196,7 +162,12 @@ socketio.on("setup_challenge_callback", function (data) {
 });
 
 function get_game_data(){
-    alert("get game data");
+    //data should contain all the prebuilt constraints, and now we can query a bunch of challenge objects down to the player
+
+
+
+
+
 }
 
 
@@ -205,10 +176,10 @@ function ping() {
     socketio.emit("ping_server");
 }
 
-function form_refresh(html_element_id, socket_data_field){
+function form_refresh(html_element_id, socket_data_field, socket_data_passthrough){
     //This handles Genre callback
     document.getElementById(html_element_id).innerHTML = '';
-    data[socket_data_field].forEach(year => {
+    socket_data_passthrough[socket_data_field].forEach(year => {
         let childlabel = document.createElement("option");
         childlabel.value = year
         childlabel.innerHTML = year
