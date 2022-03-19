@@ -30,6 +30,7 @@ const {
 const {
     count
 } = require("console");
+const { lookup } = require("dns");
 
 let db = new sqlite3.Database('../community/db.sqlite3', (err) => {
     if (err) {
@@ -278,7 +279,7 @@ io.sockets.on("connection", function (socket) {
 
                 for (let key in data) {
                     if (data.hasOwnProperty(key)) {
-                        if (key !== "isEmpty") {
+                        if (key !== "isEmpty" && lookup_key(key) !== "duration") {
 
                             //If multiple params
                             if (Array.isArray(data[key])) {
@@ -395,14 +396,67 @@ io.sockets.on("connection", function (socket) {
 
                 console.log("Game id to work with if false: ", game_id_array);
 
+                if(game_id_array.length > 0){
+                    chal_query += "(";
+                }
+
                 game_id_array.forEach(id => {
                     chal_query += "game_id=" + id + " OR ";
                 });
 
                 if(game_id_array.length > 0){
                     chal_query = chal_query.slice(0, chal_query.length-3);
+                    chal_query += ")";
                 }
-                //Also chaining on an AND clause for 
+                //Also chaining on an AND clause for constraining duration
+
+                //TODO: eventually futureproof this for more robust challenge filters
+
+                
+                for (let key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        //Ability to chain different params for future fields
+                        if (lookup_key(key) === 'duration') {
+
+                            //If multiple params
+                            if (Array.isArray(data[key])) {
+
+                                chal_query += "  AND  (";
+
+                                //console.log(data[key]);
+                                data[key].forEach(perdatakey => {
+                                    let inskey = perdatakey
+
+                                    if (isNaN(perdatakey)) {
+                                        perdatakey = "'" + perdatakey + "'"
+                                    }
+
+                                    chal_query += lookup_key(key) + "='" + inskey + "' OR ";
+                                });
+
+                                chal_query = chal_query.slice(0, chal_query.length - 4)
+
+                                chal_query += ")";
+
+
+                            } else {
+
+                                //numeric vs string filtering
+
+                                let inskey = data[key]
+
+                                if (isNaN(inskey)) {
+                                    inskey = "'" + inskey + "'"
+                                }
+
+                                chal_query += " AND " + lookup_key(key) + "=" + inskey;
+
+                            }
+
+                        }
+                    }
+                }
+
 
                 console.log("Query to execute: " + chal_query);
 
@@ -468,6 +522,8 @@ function lookup_key(key) {
             return 'game_title';
         case 'game':
             return 'game_title';
+        case 'challenge_duration':
+            return 'duration';
         default:
             return key;
     }

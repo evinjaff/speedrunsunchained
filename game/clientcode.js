@@ -58,9 +58,9 @@ function filter_games() {
     socketdata = reusable_query_getter("year", "selectmultiple_year", socketdata);
     socketdata = reusable_query_getter("console", "selectmultiple_console", socketdata);
     socketdata = reusable_query_getter("game", "selectmultiple_game", socketdata);
+    socketdata = reusable_query_getter("challenge_duration", "selectmultiple_challenge_duration", socketdata);
 
     console.log(socketdata)
-    //socketdata = {"year_published": 1986, "console": ["NES", "SNES"], "isEmpty": false}
 
     socketio.emit("setup_filters", socketdata);
 }
@@ -195,10 +195,27 @@ socketio.on("setup_challenge_callback", function (data) {
 
 });
 
+function get_game_data(){
+    alert("get game data");
+}
+
 
 
 function ping() {
     socketio.emit("ping_server");
+}
+
+function form_refresh(html_element_id, socket_data_field){
+    //This handles Genre callback
+    document.getElementById(html_element_id).innerHTML = '';
+    data[socket_data_field].forEach(year => {
+        let childlabel = document.createElement("option");
+        childlabel.value = year
+        childlabel.innerHTML = year
+         
+        document.getElementById(html_element_id).appendChild(childlabel)
+
+    })
 }
 
 setup();
