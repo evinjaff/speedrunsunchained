@@ -326,7 +326,7 @@ io.sockets.on("connection", function (socket) {
                 console.log("Query: " + query);
 
 
-
+                //This queries polls_game with filters
                 db.each(query, (err, row) => {
                     if (err) {
                         console.error(err.message);
@@ -345,7 +345,7 @@ io.sockets.on("connection", function (socket) {
 
                 }, (err, row) => {
 
-                    //Polish and send data back
+                    //Polish and send data back - Custom sorts handle order
 
                     let custom_sorted_console = Array.from(consoleset).sort(function (a, b) {
                         let wordToBeLast = 'N/A'; // set your word here
@@ -378,20 +378,6 @@ io.sockets.on("connection", function (socket) {
                         }
                     })
 
-                    console.log(custom_sorted_genre)
-
-                    
-
-                    
-
-                    socket.emit("setup_filters_callback", {
-                        "game_title": titlearr.sort(),
-                        "console": custom_sorted_console,
-                        "year": Array.from(yearset).sort(),
-                        "genre": custom_sorted_genre,
-                        "found_games": counter,
-                        "found_challenges": 0,
-                    })
 
                      //Get Filtered Challenges here
 
@@ -405,7 +391,7 @@ io.sockets.on("connection", function (socket) {
                 //console.log("Game id to work with: ", game_id_array);
                 chal_query = `SELECT * FROM polls_challenge WHERE `
 
-                
+                let chal_counter = 0;
 
                 console.log("Game id to work with if false: ", game_id_array);
 
@@ -413,7 +399,10 @@ io.sockets.on("connection", function (socket) {
                     chal_query += "game_id=" + id + " OR ";
                 });
 
-                chal_query = chal_query.slice(0, chal_query.length-3);
+                if(game_id_array.length > 0){
+                    chal_query = chal_query.slice(0, chal_query.length-3);
+                }
+                //Also chaining on an AND clause for 
 
                 console.log("Query to execute: " + chal_query);
 
@@ -421,6 +410,8 @@ io.sockets.on("connection", function (socket) {
                     if (err) {
                         console.error(err.message);
                     }
+
+                    chal_counter++;
 
                     //console.log(row);
 
@@ -432,6 +423,15 @@ io.sockets.on("connection", function (socket) {
 
                     //Polish and send data back
 
+                    socket.emit("setup_filters_callback", {
+                        "game_title": titlearr.sort(),
+                        "console": custom_sorted_console,
+                        "year": Array.from(yearset).sort(),
+                        "genre": custom_sorted_genre,
+                        "found_games": counter,
+                        "found_challenges": chal_counter,
+                    })
+
 
                     socket.emit("setup_challenge_callback", {
                         "duration": Array.from(chal_duration_set).sort()
@@ -439,6 +439,8 @@ io.sockets.on("connection", function (socket) {
                 });
 
                 });
+
+                
 
                
 
@@ -463,6 +465,8 @@ function lookup_key(key) {
         case 'year':
             return 'year_published';
         case 'title':
+            return 'game_title';
+        case 'game':
             return 'game_title';
         default:
             return key;

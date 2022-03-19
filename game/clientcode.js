@@ -47,6 +47,9 @@ function setup() {
 //This function takes the data from the form and generates queries to update the game filter.
 function filter_games() {
 
+
+    //If there's already queries being returned, let's keep going
+
     let socketdata = {
         "isEmpty": true
     }
@@ -54,6 +57,7 @@ function filter_games() {
     socketdata = reusable_query_getter("genre", "selectmultiple_genre", socketdata);
     socketdata = reusable_query_getter("year", "selectmultiple_year", socketdata);
     socketdata = reusable_query_getter("console", "selectmultiple_console", socketdata);
+    socketdata = reusable_query_getter("game", "selectmultiple_game", socketdata);
 
     console.log(socketdata)
     //socketdata = {"year_published": 1986, "console": ["NES", "SNES"], "isEmpty": false}
@@ -115,7 +119,7 @@ socketio.on("setup_filters_callback", function (data) {
 
     //Manage Quantity Tracker
     if (data['found_games'] != undefined) {
-        document.getElementById("recordsfound").innerHTML = data['found_games'] + " records found";
+        document.getElementById("recordsfound").innerHTML = data['found_games'] + " games found";
     } else {
         document.getElementById("recordsfound").innerHTML = "";
     }
@@ -134,6 +138,7 @@ socketio.on("setup_filters_callback", function (data) {
         let childlabel = document.createElement("option");
         childlabel.value = console
         childlabel.innerHTML = console
+         
         document.getElementById("selectmultiple_console").appendChild(childlabel)
 
     })
@@ -144,6 +149,7 @@ socketio.on("setup_filters_callback", function (data) {
         let childlabel = document.createElement("option");
         childlabel.value = title
         childlabel.innerHTML = title
+         
         document.getElementById("selectmultiple_game").appendChild(childlabel)
 
     })
@@ -154,6 +160,7 @@ socketio.on("setup_filters_callback", function (data) {
         let childlabel = document.createElement("option");
         childlabel.value = year
         childlabel.innerHTML = year
+         
         document.getElementById("selectmultiple_year").appendChild(childlabel)
 
     })
@@ -164,6 +171,7 @@ socketio.on("setup_filters_callback", function (data) {
         let childlabel = document.createElement("option");
         childlabel.value = year
         childlabel.innerHTML = year
+         
         document.getElementById("selectmultiple_genre").appendChild(childlabel)
 
     })
