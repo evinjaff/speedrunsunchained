@@ -30,7 +30,10 @@ const {
 const {
     count
 } = require("console");
-const { lookup } = require("dns");
+const {
+    lookup
+} = require("dns");
+const { formatWithOptions } = require("util");
 
 let db = new sqlite3.Database('../community/db.sqlite3', (err) => {
     if (err) {
@@ -253,6 +256,8 @@ io.sockets.on("connection", function (socket) {
                     socket.emit("setup_challenge_callback", {
                         "duration": Array.from(chal_duration_set).sort()
                     })
+
+
                 });
 
             });
@@ -277,10 +282,11 @@ io.sockets.on("connection", function (socket) {
                 //Expected:  SELECT * FROM polls_game WHERE (genre='Adventure' OR genre='3D Platformer') AND (year_published='1986' OR year_published='1988' OR year_published='1996' ) AND (console='NES' OR console='SNES' OR console='Nintendo 64')
                 //Actual:    SELECT * FROM polls_game WHERE genre='Adventure' OR genre='Platformer' OR year_published='1986' OR year_published='1988' OR year_published='1995' OR console='NES' OR console='SNES' OR console='Nintendo 64'
 
+                let id_map = new Map();
 
                 for (let key in data) {
                     if (data.hasOwnProperty(key)) {
-                        if (key !== "isEmpty" && lookup_key(key) !== "duration") {
+                        if (key !== "isEmpty" && lookup_key(key) !== "duration" && key !== "handoff") {
 
                             //If multiple params
                             if (Array.isArray(data[key])) {
@@ -340,6 +346,7 @@ io.sockets.on("connection", function (socket) {
                     titlearr[titlearr.length] = row.game_title;
                     game_id_array[game_id_array.length] = row.id;
                     console.log("game_id_array: ", game_id_array)
+                    id_map.set(row.id , {"title": row.game_title, "console": row.console, "year": row.year_published})
 
                     counter++;
 
@@ -381,123 +388,167 @@ io.sockets.on("connection", function (socket) {
                     })
 
 
-                     //Get Filtered Challenges here
+                    //Get Filtered Challenges here
 
-                //Notes to Evin for how to write this. Basically since we're working with 
-                //raw SQLite with no sexy Python, the way that this has to work, is that 
-                //we need to stash the relevant games from the top query (specifically their id)
-                // and then the foreign key will have the game we need
-                // So then our query just looks like
-                // SELECT * FROM polls_challenge WHERE game_id=1 OR game_id=2 OR game_id=3..
+                    //Notes to Evin for how to write this. Basically since we're working with 
+                    //raw SQLite with no sexy Python, the way that this has to work, is that 
+                    //we need to stash the relevant games from the top query (specifically their id)
+                    // and then the foreign key will have the game we need
+                    // So then our query just looks like
+                    // SELECT * FROM polls_challenge WHERE game_id=1 OR game_id=2 OR game_id=3..
 
-                //console.log("Game id to work with: ", game_id_array);
-                chal_query = `SELECT * FROM polls_challenge WHERE `
+                    //console.log("Game id to work with: ", game_id_array);
+                    chal_query = `SELECT * FROM polls_challenge WHERE `
 
-                let chal_counter = 0;
+                    let chal_counter = 0;
 
-                console.log("Game id to work with if false: ", game_id_array);
+                    console.log("Game id to work with if false: ", game_id_array);
 
-                if(game_id_array.length > 0){
-                    chal_query += "(";
-                }
+                    if (game_id_array.length > 0) {
+                        chal_query += "(";
+                    }
 
-                game_id_array.forEach(id => {
-                    chal_query += "game_id=" + id + " OR ";
-                });
+                    game_id_array.forEach(id => {
+                        chal_query += "game_id=" + id + " OR ";
+                    });
 
-                if(game_id_array.length > 0){
-                    chal_query = chal_query.slice(0, chal_query.length-3);
-                    chal_query += ")";
-                }
-                //Also chaining on an AND clause for constraining duration
+                    if (game_id_array.length > 0) {
+                        chal_query = chal_query.slice(0, chal_query.length - 3);
+                        chal_query += ")";
+                    }
+                    //Also chaining on an AND clause for constraining duration
 
-                //TODO: eventually futureproof this for more robust challenge filters
+                    //TODO: eventually futureproof this for more robust challenge filters
 
-                
-                for (let key in data) {
-                    if (data.hasOwnProperty(key)) {
-                        //Ability to chain different params for future fields
-                        if (lookup_key(key) === 'duration') {
 
-                            //If multiple params
-                            if (Array.isArray(data[key])) {
+                    for (let key in data) {
+                        if (data.hasOwnProperty(key)) {
+                            //Ability to chain different params for future fields
+                            if (lookup_key(key) === 'duration') {
 
-                                chal_query += "  AND  (";
+                                //If multiple params
+                                if (Array.isArray(data[key])) {
 
-                                //console.log(data[key]);
-                                data[key].forEach(perdatakey => {
-                                    let inskey = perdatakey
+                                    chal_query += "  AND  (";
 
-                                    if (isNaN(perdatakey)) {
-                                        perdatakey = "'" + perdatakey + "'"
+                                    //console.log(data[key]);
+                                    data[key].forEach(perdatakey => {
+                                        let inskey = perdatakey
+
+                                        if (isNaN(perdatakey)) {
+                                            perdatakey = "'" + perdatakey + "'"
+                                        }
+
+                                        chal_query += lookup_key(key) + "='" + inskey + "' OR ";
+                                    });
+
+                                    chal_query = chal_query.slice(0, chal_query.length - 4)
+
+                                    chal_query += ")";
+
+
+                                } else {
+
+                                    //numeric vs string filtering
+
+                                    let inskey = data[key]
+
+                                    if (isNaN(inskey)) {
+                                        inskey = "'" + inskey + "'"
                                     }
 
-                                    chal_query += lookup_key(key) + "='" + inskey + "' OR ";
-                                });
+                                    chal_query += " AND " + lookup_key(key) + "=" + inskey;
 
-                                chal_query = chal_query.slice(0, chal_query.length - 4)
-
-                                chal_query += ")";
-
-
-                            } else {
-
-                                //numeric vs string filtering
-
-                                let inskey = data[key]
-
-                                if (isNaN(inskey)) {
-                                    inskey = "'" + inskey + "'"
                                 }
 
-                                chal_query += " AND " + lookup_key(key) + "=" + inskey;
-
                             }
-
                         }
                     }
-                }
 
+                    //So here's my idea
 
-                console.log("Query to execute: " + chal_query);
+                    // you can get a random row using
+                    // SELECT * FROM table ORDER BY RANDOM() LIMIT 1;
+                    
+                    //I'm going to flip the script on the query string if we know that we're trying to handoff it
+                    //That way it's one query directly into it.
 
-                db.each(chal_query, (err, row) => {
-                    if (err) {
-                        console.error(err.message);
+                    //I'm arbitrarily capping it by 4 for now, I can make it bigger
+                    //ORDER BY RANDOM() LIMIT 4;
+
+                    if(data["handoff"]){
+                        chal_query += "ORDER BY RANDOM() LIMIT 4";
                     }
 
-                    chal_counter++;
-
-                    //console.log(row);
-
-                    chal_duration_set.add(row.duration);
+                    let challenge_array_to_send_back = [];
 
 
+                    console.log("Query to execute: " + chal_query);
 
-                }, (err, row) => {
+                    db.each(chal_query, (err, row) => {
+                        if (err) {
+                            console.error(err.message);
+                        }
 
-                    //Polish and send data back
+                        chal_counter++;
 
-                    socket.emit("setup_filters_callback", {
-                        "game_title": titlearr.sort(),
-                        "console": custom_sorted_console,
-                        "year": Array.from(yearset).sort(),
-                        "genre": custom_sorted_genre,
-                        "found_games": counter,
-                        "found_challenges": chal_counter,
-                    })
+                        //console.log(row);
+
+                        chal_duration_set.add(row.duration);
+
+                        challenge_object = {
+                            "game_associated": id_map.get(row.game_id),
+                            "challenge_title": row.challenge_title,
+                            "challenge_description": row.challenge_description,
+                            "challenge_difficulty": row.difficulty,
+                            "challenge_duration": row.duration
+                        }
+
+                        console.log(challenge_object);
+
+                        challenge_array_to_send_back.push(challenge_object);
 
 
-                    socket.emit("setup_challenge_callback", {
-                        "duration": Array.from(chal_duration_set).sort()
-                    })
+
+                    }, (err, row) => {
+
+                        //Polish and send data back
+
+                        socket.emit("setup_filters_callback", {
+                            "game_title": titlearr.sort(),
+                            "console": custom_sorted_console,
+                            "year": Array.from(yearset).sort(),
+                            "genre": custom_sorted_genre,
+                            "found_games": counter,
+                            "found_challenges": chal_counter,
+                        })
+
+                        // Depending on whether we're at the game, we can throw it back for more filtering or handoff game execution to the app
+
+                        if(data["handoff"]){
+
+                            //Now we're ready to get all the data and get back
+
+                            console.log("LETS GET THIS SHIT ON THE ROAD")
+
+
+                            socket.emit("game_handoff_callback", {
+                                "challenges": challenge_array_to_send_back
+                            })
+                        }else{
+                            socket.emit("setup_challenge_callback", {
+                                "duration": Array.from(chal_duration_set).sort()
+                            })
+                        }
+
+                       
+                    });
+
                 });
 
-                });
 
-                
 
-               
+
 
 
             });
@@ -508,17 +559,6 @@ io.sockets.on("connection", function (socket) {
 
 
     });
-
-    socket.on('get_game_filter', function (data) {
-        //Here we go, final server function.
-
-        //Hopefully not a 400 line function like the last one
-
-
-
-    });
-
-    get_game_filter
 
 
 });

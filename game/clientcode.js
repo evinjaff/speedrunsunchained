@@ -45,7 +45,7 @@ function setup() {
 }
 
 //This function takes the data from the form and generates queries to update the game filter.
-function filter_games() {
+function filter_games(type) {
 
 
     //If there's already queries being returned, let's keep going
@@ -62,30 +62,39 @@ function filter_games() {
 
     console.log(socketdata)
 
-    socketio.emit("setup_filters", socketdata);
+    if(type === "handoff_to_game"){
+        socketdata["handoff"] = true;
+        socketio.emit("setup_filters", socketdata);
+    }
+    else if (type === 'game_filter'){
+        socketdata["handoff"] = false;
+        socketio.emit("setup_filters", socketdata);
+    }
+
+
 }
 
 //This function takes the data from the form and generates queries to update the game filter.
-function get_game_data() {
+// function get_game_data() {
 
 
-    //If there's already queries being returned, let's keep going
+//     //If there's already queries being returned, let's keep going
 
-    let socketdata = {
-        "isEmpty": true
-    }
+//     let socketdata = {
+//         "isEmpty": true
+//     }
 
-    socketdata = reusable_query_getter("genre", "selectmultiple_genre", socketdata);
-    socketdata = reusable_query_getter("year", "selectmultiple_year", socketdata);
-    socketdata = reusable_query_getter("console", "selectmultiple_console", socketdata);
-    socketdata = reusable_query_getter("game", "selectmultiple_game", socketdata);
-    socketdata = reusable_query_getter("challenge_duration", "selectmultiple_challenge_duration", socketdata);
+//     socketdata = reusable_query_getter("genre", "selectmultiple_genre", socketdata);
+//     socketdata = reusable_query_getter("year", "selectmultiple_year", socketdata);
+//     socketdata = reusable_query_getter("console", "selectmultiple_console", socketdata);
+//     socketdata = reusable_query_getter("game", "selectmultiple_game", socketdata);
+//     socketdata = reusable_query_getter("challenge_duration", "selectmultiple_challenge_duration", socketdata);
 
-    console.log(socketdata)
+//     console.log(socketdata)
 
-    //Once this happens, we don't need websockets anymore -- yay!!
-    socketio.emit("get_game_filter", socketdata);
-}
+//     //Once this happens, we don't need websockets anymore -- yay!!
+//     socketio.emit("get_game_filter", socketdata);
+// }
 
 
 function reusable_query_getter(attribute_JSON_field, attribute_HTML_id, passthrough_socketdata) {
@@ -180,14 +189,13 @@ socketio.on("setup_challenge_callback", function (data) {
 
 });
 
-function get_game_data(){
-    //data should contain all the prebuilt constraints, and now we can query a bunch of challenge objects down to the player
+socketio.on("game_handoff_callback", function(data){
+    alert("yay we can start the game");
+    console.log(data);
+})
 
 
 
-
-
-}
 
 
 
