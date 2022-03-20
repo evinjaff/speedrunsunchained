@@ -3,6 +3,10 @@ var socketio = io.connect();
 
 let globaldebug;
 
+let global_challenges = [];
+
+let global_num_players = 1;
+
 //TODO: Stash the last queried blob to prevent slamming the server
 
 
@@ -190,11 +194,13 @@ socketio.on("setup_challenge_callback", function (data) {
 });
 
 socketio.on("game_handoff_callback", function(data){
-    alert("yay we can start the game");
+    //alert("yay we can start the game");
 
     //Invoke the game loop
 
-    console.log(data);
+    global_challenges = data;
+
+    console.log(global_challenges);
 
     //Make the form invisible
     document.getElementById("form_part").style = "display: none;";
@@ -226,5 +232,43 @@ function form_refresh(html_element_id, socket_data_field, socket_data_passthroug
 
     })
 }
+
+function add_player_inputs(){
+
+    let num_players = document.getElementById("players").value
+
+    global_num_players = num_players;
+
+    console.log("Calling add player limit")
+
+    //Prevent tampering
+
+    if(num_players > 1 && num_players < 7){
+
+        document.getElementById("nameplayers").innerHTML = "";
+
+        //Let's add more text inputs
+        for(let i=0;i< num_players;i++){
+
+            console.log(i)
+            //Append player elements
+            let input = document.createElement("div");
+
+            input.innerHTML = `<div class="form-group">
+            <label class="col-md-4 control-label" for="name_for_player_${i}">Player ${i}'s Name:</label>
+            <div class="col-md-4">
+                <input id="name_for_player_${i}" name="textinput" value="Player ${i}" type="text" placeholder="placeholder"
+                    class="form-control input-md">
+                <span class="help-block">help</span>
+            </div>
+        </div>`
+
+        document.getElementById("nameplayers").appendChild(input);
+
+        }
+    }
+
+}
+
 
 setup();
