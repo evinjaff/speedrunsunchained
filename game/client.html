@@ -170,7 +170,7 @@
             <div class="form-group">
                 <label class="col-md-4 control-label" for="players">Number of Players</label>
                 <div class="col-md-4">
-                    <input id="players" name="textinput" value="1" min="1" max="4" type="number" placeholder="placeholder"
+                    <input id="players" name="textinput" value="1" min="1" max="8" type="number" placeholder="placeholder"
                         class="form-control input-md">
                     <span class="help-block">help</span>
                 </div>
@@ -194,7 +194,7 @@
             <div class="form-group">
                 <label class="col-md-4 control-label" for="getme_into_the_gameloop"></label>
                 <div class="col-md-4">
-                    <button onclick="gameloop()" id="getme_into_the_gameloop"
+                    <button onclick="gamestartup()" id="getme_into_the_gameloop"
                         class="btn btn-primary">Start the Game!</button>
                 </div>
             </div>
@@ -203,6 +203,23 @@
             <h3>Debug Text Goes Below</h3>
 
             <h5 id="uiconsole">Console Text</h5>
+
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="Firstonewon"></label>
+                <div class="col-md-4">
+                    <button onclick="winning_one()" id="Firstonewon"
+                        class="btn btn-primary">Player 0 Wins!</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="Secondonewon"></label>
+                <div class="col-md-4">
+                    <button onclick="losing_two()" id="Secondonewon"
+                        class="btn btn-primary">Player 1 Wins!</button>
+                </div>
+            </div>
 
 
 
