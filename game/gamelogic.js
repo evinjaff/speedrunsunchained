@@ -50,7 +50,7 @@ function gamestartup(){
 
     //TODO: Validation for junk data
 
-    game_global = new Game(4, global_num_players);
+    game_global = new Game(3, global_num_players);
 
     console.log(game_global)
 
@@ -74,9 +74,34 @@ function gamestartup(){
     console.log(game_global)
 
     //Ok now we can get the show on the road. Let's increment the round counter by 1 
-    game_global.currentround++;
+    //game_global.currentround++;
 
-    //Let's grab our first challenge
+    //Now this will be handled by the setup_next_round call
+    setup_next_round();
+
+
+}
+
+//Reusable function to increment the game as it goes on
+function setup_next_round(){
+
+    //Before we start the steps we need to make sure we're at the right milestones
+
+    //Are we at the end of the round?
+    if(game_global.matchups[game_global.currentround].length === 0){
+        //if so, let's increment the round
+        game_global.currentround++;
+    }
+
+    //Are we at the end of the game?
+    if(game_global.currentround >= game_global.rounds){
+        //If so start up the end sequence - just an alert for now
+        alert("game is done son");
+        return;
+    }
+
+    //Now with those edge cases out of the way, let's get to playing
+    //Let's grab our challenge
 
     let matchup = game_global.matchups[game_global.currentround].pop();
 
@@ -88,24 +113,15 @@ function gamestartup(){
     //and display the first matchup as well as the win buttons
 
 
-    //TODO deal with aesthetics
+    //TODO deal with aesthetics and grab the challenge to play
 
-    log_to_screen(`Round ${game_global.currentround} is ${player0.name} vs ${player1.name}
+    log_to_screen(`Round ${game_global.currentround+1} is ${player0.name} vs ${player1.name}
     
     Your challenge is to add a new
     `)
 
     document.getElementById("Firstonewon").innerHTML  = player0.name + " wins!";
     document.getElementById("Secondonewon").innerHTML = player1.name + " wins!";
-
-
-
-}
-
-//Reusable function to increment the game as it goes on
-function setup_next_round(){
-
-    
 
 }
 
