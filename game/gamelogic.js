@@ -1,7 +1,10 @@
 //This will run the main game logic
 
 
-let game_global
+let game_global;
+
+let player0;
+let player1;
 
 class Game {
 
@@ -20,7 +23,8 @@ class Game {
             this.players[i] = {
                 "name": document.getElementById(`name_for_player_${i}`).value,
                 "score": 0,
-                "playerid": `player${i}`
+                "playerid": `player${i}`,
+                "index": i
             }
         }
 
@@ -69,35 +73,96 @@ function gamestartup(){
 
     console.log(game_global)
 
-    //Pop and display the first matchup on the screeen
+    //Ok now we can get the show on the road. Let's increment the round counter by 1 
+    game_global.currentround++;
+
+    //Let's grab our first challenge
+
+    let matchup = game_global.matchups[game_global.currentround].pop();
+
+    //set the player variables to each other
+
+    player0 = matchup[0]
+    player1 = matchup[1]
+
+    //and display the first matchup as well as the win buttons
 
 
+    //TODO deal with aesthetics
 
+    log_to_screen(`Round ${game_global.currentround} is ${player0.name} vs ${player1.name}
+    
+    Your challenge is to add a new
+    `)
 
-
-
+    document.getElementById("Firstonewon").innerHTML  = player0.name + " wins!";
+    document.getElementById("Secondonewon").innerHTML = player1.name + " wins!";
 
 
 
 }
 
+//Reusable function to increment the game as it goes on
+function setup_next_round(){
+
+    
+
+}
+
+//id being which player won, 0 or 1
+function winner(id){
+
+
+    //TODO: Do the minimal logic thing eventually
+    //This will increment the respective scores
+    if(id === 0){
+        game_global.players[player0.index].score++;
+    }
+    else{
+        game_global.players[player1.index].score++;
+    }
+
+    console.log(game_global.players);
+
+    //call for a new setup to begin
+
+    setup_next_round();
+    
+
+}
+
+
 function add_matchup(matchup_index, game_object){
     let Playersdeepcopy = structuredClone(game_object.players);
 
+    
+
     let matchups = [];
 
-    while(Playersdeepcopy.length > 0){
+
+    //Alternative implementation
+    while(Playersdeepcopy.length !== 0){
+
+        console.log(Playersdeepcopy)
 
         //Grab the first entry and remove it
 
-        let pair_1 = Playersdeepcopy.splice(0,1);
+        // let pair_1 = Playersdeepcopy.splice(0,1)[0];
 
 
-        let removal_index  =  Math.floor(Playersdeepcopy.length * Math.random());
+        // let removal_index  =  Math.floor(Playersdeepcopy.length * Math.random());
 
-        let pair_2 = Playersdeepcopy.splice(removal_index, removal_index+1);
+        // console.log(removal_index)
 
-        matchups[matchups.length] = [ pair_1, pair_2 ];
+        // let pair_2 = Playersdeepcopy.splice(removal_index, removal_index+1)[0];
+
+        // console.log("pair 1: ", pair_1, " pair 2: ", pair_2);
+
+        fisher_yates_shuffle(Playersdeepcopy);
+
+
+
+        matchups[matchups.length] = [ Playersdeepcopy.pop(), Playersdeepcopy.pop() ];
 
         console.log(matchups);
 
@@ -142,5 +207,23 @@ switch(n){
 }
 
 }
+
+function fisher_yates_shuffle(array) {
+    let currentIndex = array.length,  randomIndex;
+  
+    // While there remain elements to shuffle...
+    while (currentIndex != 0) {
+  
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+  
+    return array;
+  }
 
 
