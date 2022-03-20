@@ -115,9 +115,30 @@ function setup_next_round(){
 
     //TODO deal with aesthetics and grab the challenge to play
 
+    //Ok here's how we get our challenges
+
+    
+
+    let challenge_to_play;
+
+    //First, let's verify that we have enough challenges for each
+    if( (game_global.rounds-game_global.currentround) ){
+
+        challenge_to_play = global_challenges.pop();
+
+    }
+    else{
+        //Otherwise, let's fallback - not yet
+
+        challenge_to_play = global_challenges.pop();
+
+
+    }
+
+    //Appearnce stuff - will be prettified eventually
     log_to_screen(`Round ${game_global.currentround+1} is ${player0.name} vs ${player1.name}
     
-    Your challenge is to add a new
+    Your challenge is to ${challenge_to_play.challenge_title}
     `)
 
     document.getElementById("Firstonewon").innerHTML  = player0.name + " wins!";

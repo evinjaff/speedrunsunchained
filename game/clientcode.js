@@ -167,7 +167,7 @@ socketio.on("game_handoff_callback", function(data){
 
     //Invoke the game loop
 
-    global_challenges = data;
+    global_challenges = data["challenges"];
 
     console.log(global_challenges);
 
@@ -176,7 +176,9 @@ socketio.on("game_handoff_callback", function(data){
     //Make it visible
     document.getElementById("gamepart").style = "";
 
-    gameloop();
+
+    //Is this throttling performance?
+    //fisher_yates_shuffle(global_challenges);
     
 })
 
