@@ -6,6 +6,8 @@ let game_global;
 let player0;
 let player1;
 
+let flag_not_enough_challenges;
+
 class Game {
 
     constructor(rounds, nplayers){
@@ -72,9 +74,28 @@ function gamestartup(){
     }
 
     console.log(game_global)
+    
+    //check if no challenges are specified
+    if(global_challenges == undefined){
+        alert("error in retreiving challenges, try to restart your browser")
+    }else if(global_challenges.length == 0){
+        alert("ERROR: You have 0 challenges. You either have an impossible filter combination or you haven't picked challenges yet")
+    }
+    else if(
+        game_global.rounds*(Math.floor(game_global.nplayers/2)) >= global_challenges.length){
+        alert(`Warning, you don't have enough challenges to play a full game at least ${game_global.rounds*(Math.floor(game_global.nplayers/2))} are reccomended. \n 
+        
+        You have ${global_challenges.length} challenges with your filters.
+        
+        If you proceed, challenges will reappear. `)
+    }
+    else{
 
-    //Ok now we can get the show on the road. Let's increment the round counter by 1 
-    //game_global.currentround++;
+    }
+
+   
+
+    //Ok now we can get the show on the road. Let's increment the round counter by 1
 
     //Now this will be handled by the setup_next_round call
     setup_next_round();
@@ -122,7 +143,7 @@ function setup_next_round(){
     let challenge_to_play;
 
     //First, let's verify that we have enough challenges for each
-    if( (game_global.rounds-game_global.currentround) ){
+    if( !flag_not_enough_challenges ){
 
         challenge_to_play = global_challenges.pop();
 
@@ -134,6 +155,8 @@ function setup_next_round(){
 
 
     }
+
+    console.log(challenge_to_play);
 
     //Appearnce stuff - will be prettified eventually
     log_to_screen(`Round ${game_global.currentround+1} is ${player0.name} vs ${player1.name}
