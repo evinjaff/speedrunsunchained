@@ -178,10 +178,31 @@
 
             <div id="nameplayers">
 
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="name_for_player_0">Player 0's Name:</label>
+                    <div class="col-md-4">
+                        <input id="name_for_player_0" name="textinput" value="Player 0" type="text" placeholder="placeholder"
+                            class="form-control input-md">
+                        <span class="help-block">help</span>
+                    </div>
+                </div>
 
             </div>
 
             <br>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="getme_into_the_gameloop"></label>
+                <div class="col-md-4">
+                    <button onclick="gameloop()" id="getme_into_the_gameloop"
+                        class="btn btn-primary">Start the Game!</button>
+                </div>
+            </div>
+
+
+            <h3>Debug Text Goes Below</h3>
+
+            <h5 id="uiconsole">Console Text</h5>
 
 
 

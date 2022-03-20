@@ -10,37 +10,6 @@ let global_num_players = 1;
 //TODO: Stash the last queried blob to prevent slamming the server
 
 
-class Game {
-
-
-
-
-
-}
-
-
-class Filter {
-
-
-    constructor() {
-
-        //Read 
-
-
-    }
-
-
-    construct_query(games) {
-
-    }
-
-
-
-
-
-}
-
-
 //Ask the server for metadata filters
 function setup() {
     socketio.emit("setup_filters", {
