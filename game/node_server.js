@@ -469,15 +469,13 @@ io.sockets.on("connection", function (socket) {
 
                     // you can get a random row using
                     // SELECT * FROM table ORDER BY RANDOM() LIMIT 1;
-                    
-                    //I'm going to flip the script on the query string if we know that we're trying to handoff it
-                    //That way it's one query directly into it.
 
-                    //I'm arbitrarily capping it by 4 for now, I can make it bigger
-                    //ORDER BY RANDOM() LIMIT 4;
+                    //Ok so just because I want to be lazy I'm going to keep this arbitrary limit to 
+                    //keep the client's memory usage lightweight. I'm going to do this by limiting it to
+                    // 24 rounds bc I'm going to assume a max case of 8 players with 6 rounds
 
                     if(data["handoff"]){
-                        chal_query += "ORDER BY RANDOM() LIMIT 4";
+                        chal_query += "ORDER BY RANDOM() LIMIT 24";
                     }
 
                     let challenge_array_to_send_back = [];

@@ -80,9 +80,14 @@ function gamestartup(){
         alert("error in retreiving challenges, try to restart your browser")
     }else if(global_challenges.length == 0){
         alert("ERROR: You have 0 challenges. You either have an impossible filter combination or you haven't picked challenges yet")
+
+        //Force a refresh?
     }
     else if(
         game_global.rounds*(Math.floor(game_global.nplayers/2)) >= global_challenges.length){
+
+            flag_not_enough_challenges = true;
+
         alert(`Warning, you don't have enough challenges to play a full game at least ${game_global.rounds*(Math.floor(game_global.nplayers/2))} are reccomended. \n 
         
         You have ${global_challenges.length} challenges with your filters.
@@ -109,7 +114,7 @@ function setup_next_round(){
     //Before we start the steps we need to make sure we're at the right milestones
 
     //Are we at the end of the round?
-    if(game_global.matchups[game_global.currentround].length === 0){
+    if(game_global.matchups[game_global.currentround].length === 0 || game_global.matchups[game_global.currentround].length === undefined){
         //if so, let's increment the round
         game_global.currentround++;
     }
@@ -149,9 +154,9 @@ function setup_next_round(){
 
     }
     else{
-        //Otherwise, let's fallback - not yet
+        //Otherwise, let's fallback and get a random element
 
-        challenge_to_play = global_challenges.pop();
+        challenge_to_play = global_challenges[ Math.floor(global_challenges.length * Math.random())  ];
 
 
     }
