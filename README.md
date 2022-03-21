@@ -2,6 +2,10 @@
  
 This a rough prototype of my idea for a "speedrun" party game. The rough Alpha for this was written over my spring break at Wash U and still has a lot of fixes to be added.
 
+<strong>Notice of University Involvement:</strong> This code was NOT created for a class at Washington University in St. Louis nor was any Washington University in St. Louis hardware used for development of "speedrunsunchained" source code. I did use my student Azure subscription to test if Azure free instances could run Django applications but only used a insignificantly refactored open-source Django Polls Application to test this.
+
+
+
 ## Technical summary
 
 This application is built using two parallel applications, a community and a game that both access a common database.
