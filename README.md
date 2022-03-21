@@ -45,6 +45,8 @@ The requirements to run the Django application can be found inside the community
 
 NOTE: For Django, I would highly recommend you use a virtual environment generated through <a href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a> or the standard python virtualenv.
 
+As for Node.js, I surprisingly didn't have any issues. Just run npm install on the game/package.JSON file and you should be good to go.
+
 
 ### Running Django and Node.js on an RHEL 7 Azure Free instance
 
