@@ -75,7 +75,7 @@ I may also see if a Raspberry Pi could host this application and might build a s
     <li>Ability to add in custom punishments/dares after each match</li>
     <li>Dynamic game title filtering</li>
     <li>Dockerfile & Docker-ized versions</li>
-
+    <li>Compatibility with IE11 and Safari (one of these is much easier than the other)</li>
 </ul>
 
 ## Special Thanks
