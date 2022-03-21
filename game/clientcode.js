@@ -14,6 +14,12 @@ let global_num_players = 1;
 
 //Ask the server for metadata filters
 function setup() {
+
+    //Revert the hidden styles
+
+    document.getElementById("formphase1").style = "";
+    document.getElementById("formphase2").style = "display: none;";
+
     socketio.emit("setup_filters", {
         "isEmpty": true
     });
@@ -100,6 +106,7 @@ function reusable_query_getter(attribute_JSON_field, attribute_HTML_id, passthro
 }
 
 
+
 //utility function to retun array from select values
 function getSelectValues(select) {
     var result = [];
@@ -142,6 +149,18 @@ socketio.on("setup_filters_callback", function (data) {
         document.getElementById("formphase2").style = "";
     }
 
+    //Let's call a reset if the query is "overconstrained" and returns not enough records
+    if(data['found_challenges'] === 0 || data['found_games'] === 0){
+        alert("Error: Your filters are overconstrained. No games or challenges exist for your selection");
+
+        //Invoke a reset
+
+        setup();
+
+
+
+    }
+
     //This handles Console callback
     form_refresh("selectmultiple_console", 'console', data);
 
@@ -179,10 +198,18 @@ socketio.on("game_handoff_callback", function(data){
 
     console.log(global_challenges);
 
+    //TODO: Change these to DOM manipulation
+
     //Make the form invisible
     document.getElementById("form_part").style = "display: none;";
     //Make it visible
     document.getElementById("gamepart").style = "";
+
+    //Remove the game & challenge status indicator
+
+    document.getElementById("recordsfound").style = "display: none;";
+
+    document.getElementById("challengesfound").style = "display: none;";
 
 
     //Is this throttling performance?
