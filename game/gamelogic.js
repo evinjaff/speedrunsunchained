@@ -196,9 +196,30 @@ function winner(id){
 
 }
 
+//This works for a deep copy of arrays with a forEach method
+function structuredClone_emulated_foreach_array(structure_to_clone){
+
+    let deep_copied_array = []
+
+    structure_to_clone.forEach(element => {
+        deep_copied_array.push(element);
+    });
+
+    return deep_copied_array;
+
+}
 
 function add_matchup(matchup_index, game_object){
-    let Playersdeepcopy = structuredClone(game_object.players);
+    let Playersdeepcopy = [];
+    
+
+    //This will rollback to an emulated structured clone if it's unable to work.
+    try{
+        Playersdeepcopy = structuredClone(game_object.players);
+    }
+    catch{
+        Playersdeepcopy = structuredClone_emulated_foreach_array(game_object.players);
+    }
 
     
 
