@@ -2,31 +2,6 @@
  
 This a rough prototype of my idea for a "speedrun" party game. The rough Alpha for this was written over my spring break at Wash U and still has a lot of fixes to be added.
 
-## Licensing
-
-I am a fierce advocate of FOSS, and as such am releasing my code under the BSD 3-Clause Clear License. My dream of this idea was not for profit, it was so that I could build a game my friends and I could enjoy on a Saturday night. With that in mind, I want this code used for good, and I also don't want someone to pull a StreamLabs OBS on my software and charge money for something that should be free. If you choose to use part of this source code
-
-<strong>Notice of University Involvement:</strong> This code was NOT created for a class at Washington University in St. Louis nor was any Washington University in St. Louis hardware used for development of "speedrunsunchained" source code. I did use my student Azure subscription to test if Azure free instances could run Django applications but only used a insignificantly refactored open-source Django Polls Application to test this.
-
-## My Vision: Dual Community - Game Feedback Loop
-
-[An image is to be added here soon]
-
-The basic concept is the idea of a positive feedback loop. There's a reddit-like community where people can post challenges for video games, and people upvote them or downvote them based on how good they think they are. People also have the chance to vote on how hard they think the challenge is as well as how long they think it would take. The idea then being that with this score, the good responses float to the top. The community page is intended to act as more of a "data-builder" because the data obtained from the community is then used for the game. The idea being then that if people playing the game have an idea for a challenge, they can post it, and then their idea might attract more people to the platform. 
-
-The way the game works is pretty simple, you can apply some filters for which games you want to see, you indicate how many players and rounds you want to play with, and hopefully you could even indicate if you wanted to add in dares or punishments for each one. Then, you'll get a prompt like:
-
-```
-Round 1: Evin vs Max
-
-In the game Mario Super Sluggers (2008, Wii)
-
-The first person to hit a "dinger" (animated home run animation) in a match against each other gets a point.
-
-```
-
-You will then play out each 1v1 challenge until a winner is crowned.
-
 ## Technical summary
 
 This application is built using two parallel applications, a community and a game that both access a common database.
@@ -46,23 +21,6 @@ The requirements to run the Django application can be found inside the community
 NOTE: For Django, I would highly recommend you use a virtual environment generated through <a href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a> or the standard python virtualenv.
 
 As for Node.js, I surprisingly didn't have any issues. Just run npm install on the game/package.JSON file and you should be good to go.
-
-
-### Running Django and Node.js on an RHEL 7 Azure Free instance
-
-If you like Azure and are cheap, I've got some bad news for you. I could not get this to run on a free instance of Azure. I chose to use RHEL 7 since I am more familiar with using yum. I think Django 4.0.2 is just too cutting edge for RHEL 7. I even attempted to compile and link a newer version of python to satisfy the SQLite requirement, but it failed to compile. I'm sure a sysadmin could probably get this to work, and I bet on RHEL 8 this would be super easy, but Azure seems to artificially limit you to RHEL 7 for a free instance. I did not try getting Node.js installed considering Python failed, but I would assume it is possible
-
-### Running Django and Node.js on a Free T.2 Micro EC2 with Amazon Linux 2
-
-It is very hard to get this to run, but it is possible! I had to compile Python 3.9 from source and then link this file into my path. I only ran it as root, which is bad practice, but you could easily port over my strategy if you wanted to use PM2 or another user to manage the application. 
-
-### Running Django and Node.js on a Potato
-
-Coming soon!
-
-I got my hands on a really old desktop (Core 2 Quad Q6600, 3 GB DDR2 555 MHz, 160GB HDD). I might take a weekend to try and see if I can install Ubuntu Server and try to get it running. I suspect that this will turn out poorly, as the Core 2 Quad will not have x86_64 instructions like POPCNT available.
-
-I may also see if a Raspberry Pi could host this application and might build a small cluster like Jeff Geerling. I have no idea if Django even supports ARM64, but I would assume that most Python modules will support ARM64.
 
 ## Features
 
@@ -94,20 +52,4 @@ I may also see if a Raspberry Pi could host this application and might build a s
     <li>To Todd Sproull and his amazing CSE330 wiki. The wiki inspired me to learn Django, and most of the skills used for this come from taking CSE 330.</li>
     <li>To all my (future) beta testers. </li>
     <li>Christian and Max, only a good friend would let me ramble for 1 hour about my idea</li>
-</ul>
-
-
-
-### An appendix on music to jam out to
-
-I know that no ever mentions it, but I wanted to say that I chose to jam out to these songs when I was building the alpha over spring break among more.
-
-<ul>
-    <li>It has to be this way - Metal Gear Rising Revengeance</li>
-    <li>Fear Factory (Kremroc Industries) - Donkey Kong Country (SNES)</li>
-    <li>Uragirimonono Requiem - Diavolo Version</li>
-    <li>Death Stranding - CHVRCHES</li>
-    <li>Fighting Gold (Instrumental) - Coda</li>
-    <li>Wake Up - Rage Against the Machine</li>
-    <li>Jolyne's Theme x Traitor's Requiem - Samuel Kim Music</li>
 </ul>
