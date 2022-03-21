@@ -218,14 +218,10 @@ socketio.on("game_handoff_callback", function(data){
     
 })
 
-
-
-
-
-
-function ping() {
-    socketio.emit("ping_server");
-}
+//Might bring this back to verify server integrity
+// function ping() {
+//     socketio.emit("ping_server");
+// }
 
 function form_refresh(html_element_id, socket_data_field, socket_data_passthrough){
     //This handles Genre callback
