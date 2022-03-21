@@ -3,6 +3,8 @@ var socketio = io.connect();
 
 let globaldebug;
 
+let global_phase = "";
+
 let global_challenges = [];
 
 let global_num_players = 1;
@@ -18,8 +20,9 @@ function setup() {
 }
 
 //This function takes the data from the form and generates queries to update the game filter.
-function filter_games(type) {
+function filter_games(type, phase) {
 
+    global_phase = phase;
 
     //If there's already queries being returned, let's keep going
 
@@ -132,6 +135,11 @@ socketio.on("setup_filters_callback", function (data) {
         document.getElementById("challengesfound").innerHTML = data['found_challenges'] + " challenges found";
     } else {
         document.getElementById("challengesfound").innerHTML = "";
+        
+    }
+
+    if(global_phase === "phase1" && data['found_games'] != undefined){
+        document.getElementById("formphase2").style = "";
     }
 
     //This handles Console callback
@@ -178,6 +186,7 @@ socketio.on("game_handoff_callback", function(data){
 
 
     //Is this throttling performance?
+    //Yes for some reason, the site locks up when you call a fisher yates shuffle on the global challenges
     //fisher_yates_shuffle(global_challenges);
     
 })
