@@ -218,7 +218,7 @@ function add_matchup(matchup_index, game_object){
         Playersdeepcopy = structuredClone(game_object.players);
     }
     catch{
-        Playersdeepcopy = structuredClone_emulated_foreach(game_object.players);
+        Playersdeepcopy = structuredClone_emulated_foreach_array(game_object.players);
     }
 
     
