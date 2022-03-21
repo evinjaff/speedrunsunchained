@@ -2,6 +2,12 @@
  
 This a rough prototype of my idea for a "speedrun" party game. The rough Alpha for this was written over my spring break at Wash U and still has a lot of fixes to be added.
 
+## Licensing
+
+I am a fierce advocate of FOSS, and as such am releasing my code under the BSD 3-Clause Clear License. My dream of this idea was not for profit, it was so that I could build a game my friends and I could enjoy on a Saturday night. With that in mind, I want this code used for good, and I also don't want someone to pull a StreamLabs OBS on my software and charge money for something that should be free. If you choose to use part of this source code
+
+<strong>Notice of University Involvement:</strong> This code was NOT created for a class at Washington University in St. Louis nor was any Washington University in St. Louis hardware used for development of "speedrunsunchained" source code. I did use my student Azure subscription to test if Azure free instances could run Django applications but only used a insignificantly refactored open-source Django Polls Application to test this.
+
 ## My Vision: Dual Community - Game Feedback Loop
 
 [An image is to be added here soon]
@@ -36,6 +42,8 @@ This application is also not very scalable in it's present state. In an ideal wo
 ## How to run this
 
 The requirements to run the Django application can be found inside the community/requirements.txt file. This .txt file is just a raw export of all my Python packages from pip so if you aren't able to satisfy all the requirements you might still be fine. I would specifically make sure that you run version 4.0.2 of Django and that your installation of Python is new enough to include sqlite 3.9 (NOTE: This will become really important later). After testing enough implementations, I will eventually probably just form a wiki for this.
+
+NOTE: For Django, I would highly recommend you use a virtual environment generated through <a href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a> or the standard python virtualenv.
 
 
 ### Running Django and Node.js on an RHEL 7 Azure Free instance
