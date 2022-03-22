@@ -41,6 +41,10 @@ class Game {
 
 }
 
+function update_score(player, score){
+    //TODO: implement this
+}
+
 
 
 
@@ -55,6 +59,36 @@ function gamestartup(){
     game_global = new Game(3, global_num_players);
 
     console.log(game_global)
+
+    //Let's construct a score table with this
+
+    document.getElementById("score_table");
+
+    game_global.players.forEach(player => {
+
+        console.log(player);
+        //construct table heading
+        table_entry = document.createElement("th");
+
+        table_entry.innerHTML = player.name;
+
+        table_entry.scope="col";
+
+        document.getElementById("player_headings").appendChild(table_entry);
+
+        table_score = document.createElement("th");
+
+        table_score.innerHTML = "0";
+
+        //To update the score, we'll have to build in a function to do this.
+
+        table_score.scope="col";
+
+
+    });
+
+
+
 
     //Let's build a challenge map of all the matchups
 
@@ -266,10 +300,10 @@ function log_to_screen(thing){ document.getElementById("uiconsole").innerHTML = 
 //Random number in a range
 function getRandomArbitrary(min, max) { return Math.random() * (max - min) + min;}
 
- /**Array shift function that protects overshifted entries by adding them to the begining
+/**Array shift function that protects overshifted entries by adding them to the begining
        * @param {Object[]} array The array to be shifted 
        * @param {int} n The amount of entries to shift it by
-      */
+*/
 function shiftarrsafe(array, n){
 //edge case - n is bigger than the size
 switch(n){
