@@ -139,3 +139,5 @@ testsite/uploaded_files/
 game/node_modules/
 
 community/uploaded_files/
+
+*.sqbpro
