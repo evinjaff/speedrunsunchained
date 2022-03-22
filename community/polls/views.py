@@ -10,7 +10,7 @@ from django.views import generic
 from django.utils import timezone
 from django.views.generic.edit import FormView, CreateView, DeleteView, UpdateView
 
-from .models import Challenge, Game
+from .models import Challenge, Game, Comment
 
 
 class IndexView(generic.ListView):
@@ -126,8 +126,20 @@ class ChallengeView(generic.DetailView):
         # print("pk {} chal: {}".format(pk, chal))
         # print("request {}".format(request))
         queried = Challenge.objects.filter(game_id=pk).filter(game_sub_id=chal)
+
+        # get the raw challenge id
+        #print("challenge_id: ", queried[0].id)
+
+        queried_comments = Comment.objects.filter(challenge=queried[0].id)
+
+        print(queried_comments)
+
+
+
+        
+        
         # print(queried)
-        context = {"gameid": pk, "challengeid": chal, "challenge": queried[0]}
+        context = {"gameid": pk, "challengeid": chal, "challenge": queried[0], "comments": queried_comments}
         return render(request, 'polls/challenge.html', context=context)
 
 

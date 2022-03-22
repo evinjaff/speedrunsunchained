@@ -62,4 +62,19 @@ class Challenge(models.Model):
 	def has_negative_upvotes(self):
 		return self.downvotes > self.upvotes
 
+#Python model for comments on each speedrun challenge. Should link to foreign key and have stuff going on
+class Comment(models.Model):
+	challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE)
+
+	# INSERT INTO  polls_comment ( upvotes, downvotes, challenge_id, commentblob, tripcode) VALUES ( 20, 10, 4, "hello", "Hello")
+
+	upvotes = models.IntegerField(default=0)
+	downvotes = models.IntegerField(default=0)
+
+	tripcode = models.CharField(max_length=50, default="0")
+
+	commentblob = models.TextField(max_length=500)
+
+
+
 	

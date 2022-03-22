@@ -15,10 +15,17 @@
 <input type="submit" value="downvote">
 </form>
 
+<strong>{{ challenge.challenge_description }}</strong>
+
 <h3>Comments:</h3>
 
-<div>{{challenge.commentblob}}</div>
+<!-- This will contain the comments -->
 
-<div>{{gameid}} {{challengeid}}</div>
-<div>{{pk}} {{chal}}</div>
+{% for comment in comments %}
+    <p>Comment by {{ comment.tripcode }}: {{ comment.commentblob }}
+    </p>
+{% endfor %}
+
+<!-- <div>{{gameid}} {{challengeid}}</div>
+<div>{{pk}} {{chal}}</div> -->
 
