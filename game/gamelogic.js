@@ -41,8 +41,17 @@ class Game {
 
 }
 
-function update_score(player, score){
+function update_score(player_index, new_score){
     //TODO: implement this
+
+    game_global.players[player_index].score = new_score;
+
+    //update HTML elements
+
+    //TODO, figure out which DOM element this correlates to
+
+    console.log(game_global);
+
 }
 
 
@@ -200,7 +209,7 @@ function setup_next_round(){
     //Appearnce stuff - will be prettified eventually
     log_to_screen(`Round ${game_global.currentround+1} is ${player0.name} vs ${player1.name}
     
-    Your challenge is to ${challenge_to_play.challenge_title}
+    Your challenge is to ${challenge_to_play.challenge_title} in ${challenge_to_play.game_associated.title} (${challenge_to_play.game_associated.year}) for ${challenge_to_play.game_associated.console}
     `)
 
     document.getElementById("Firstonewon").innerHTML  = player0.name + " wins!";
@@ -215,10 +224,15 @@ function winner(id){
     //TODO: Do the minimal logic thing eventually
     //This will increment the respective scores
     if(id === 0){
-        game_global.players[player0.index].score++;
+
+
+        //game_global.players[player0.index].score++;
+
+        update_score( player0.index, game_global.players[player0.index].score + 1);
     }
     else{
-        game_global.players[player1.index].score++;
+        update_score( player1.index, game_global.players[player1.index].score + 1);
+        //game_global.players[player1.index].score++;
     }
 
     console.log(game_global.players);
