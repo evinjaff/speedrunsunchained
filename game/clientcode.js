@@ -242,6 +242,12 @@ socketio.on("game_handoff_callback", function(data){
 // }
 
 //@ts-check
+/**
+ * 
+ * @param {string} html_element_id - the id of the HTML select
+ * @param {string} socket_data_field - the JSON field of the socket data you want to add
+ * @param {string} socket_data_passthrough  - the JSON from the socket.io callback
+ */
 function form_refresh(html_element_id, socket_data_field, socket_data_passthrough){
     //This handles Genre callback
     document.getElementById(html_element_id).innerHTML = '';

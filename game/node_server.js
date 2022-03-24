@@ -562,6 +562,11 @@ io.sockets.on("connection", function (socket) {
 });
 
 //@ts-check
+/**
+ * 
+ * @param {string} key - the key of the title 
+ * @returns {string} stringkey - the string key associated with the string
+ */
 function lookup_key(key) {
 
     switch (key) {
