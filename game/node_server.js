@@ -42,33 +42,11 @@ let db = new sqlite3.Database('../community/db.sqlite3', (err) => {
     console.log('Connected to the Database.');
 });
 
-// let db = {};
-
-// (async () => {
-//     // open the database
-//     let dbb = await open({
-//       filename: '../testsite/db.sqlite3',
-//       driver: sqlite3.Database
-//     })
-
-//     db = dbb;
-
-//     console.log("DB Opened!");
-// })()
-
 
 
 // Listen for HTTP connections.  This is essentially a miniature static file server that only serves our one file, client.html, on port 3456:
 const server = http.createServer(function (req, resp) {
-    // This callback runs when a new connection is made to our HTTP server.
 
-    // fs.readFile(file, function (err, data) {
-    //     // This callback runs when the client.html file has been read from the filesystem.
-
-    //     if (err) return res.writeHead(500);
-    //     res.writeHead(200);
-    //     res.end(data);
-    // });
 
     var filename = path.join(__dirname, "", url.parse(req.url).pathname);
     (fs.exists || path.exists)(filename, function (exists) {

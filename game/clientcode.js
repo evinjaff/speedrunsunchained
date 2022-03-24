@@ -63,27 +63,7 @@ function filter_games(type, phase) {
 
 }
 
-//This function takes the data from the form and generates queries to update the game filter.
-// function get_game_data() {
 
-
-//     //If there's already queries being returned, let's keep going
-
-//     let socketdata = {
-//         "isEmpty": true
-//     }
-
-//     socketdata = reusable_query_getter("genre", "selectmultiple_genre", socketdata);
-//     socketdata = reusable_query_getter("year", "selectmultiple_year", socketdata);
-//     socketdata = reusable_query_getter("console", "selectmultiple_console", socketdata);
-//     socketdata = reusable_query_getter("game", "selectmultiple_game", socketdata);
-//     socketdata = reusable_query_getter("challenge_duration", "selectmultiple_challenge_duration", socketdata);
-
-//     console.log(socketdata)
-
-//     //Once this happens, we don't need websockets anymore -- yay!!
-//     socketio.emit("get_game_filter", socketdata);
-// }
 
 //@ts-check
 /** 
@@ -235,11 +215,6 @@ socketio.on("game_handoff_callback", function(data){
     //fisher_yates_shuffle(global_challenges);
     
 })
-
-//Might bring this back to verify server integrity
-// function ping() {
-//     socketio.emit("ping_server");
-// }
 
 //@ts-check
 /**
