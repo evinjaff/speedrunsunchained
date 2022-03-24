@@ -28,6 +28,11 @@ function setup() {
 
 //This function takes the data from the form and generates queries to update the game filter.
 //@ts-check
+/** 
+ *  @param  {string} type - String that indicates the specific call, whether it's to start the game or continue filtering games
+ *  @param {int} phase - An integer representation of what "phase" the game filtering is in
+ *  
+ */
 function filter_games(type, phase) {
 
     global_phase = phase;
@@ -81,6 +86,11 @@ function filter_games(type, phase) {
 // }
 
 //@ts-check
+/** 
+ *  @param  {string} attribute_JSON_field - The relevant field in the JSON returned by the socketio data
+ *  @param {string} attribute_HTML_id - HTML ID of the select tag
+ *  @param {any} passthrough_socketdata - Passes through the socket.io response to read the server response
+ */
 function reusable_query_getter(attribute_JSON_field, attribute_HTML_id, passthrough_socketdata) {
 
     let year = document.getElementById(attribute_HTML_id)
@@ -111,6 +121,11 @@ function reusable_query_getter(attribute_JSON_field, attribute_HTML_id, passthro
 
 //utility function to retun array from select values
 //@ts-check
+/**
+ * 
+ * @param {HTMLElement} select - A reference to the HTML select 
+ * @returns {string[]} - A string array of the options inputted into the HTML select
+ */
 function getSelectValues(select) {
     var result = [];
     var options = select && select.options;
