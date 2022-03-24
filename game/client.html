@@ -4,9 +4,6 @@
 <head>
     <script src="/socket.io/socket.io.js"></script>
 
-    <!-- Code to manage client-server relationship goes here -->
-    <script src="clientcode.js"></script>
-
     <!-- Main Game Logic goes here -->
     <script src="gamelogic.js"></script>
 
@@ -26,17 +23,9 @@
 
     <div class="container">
 
-        Hello, Speedrunners!
-
         <p id="recordsfound"></p>
 
         <p id="challengesfound"></p>
-
-        <br>
-
-        Form Parameters
-
-        <br>
 
 
 
@@ -45,124 +34,134 @@
 
         <div id="form_part">
 
-            <!-- Select Consoles -->
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="selectmultiple_console">Select Platforms (hold Command to
-                    select
-                    multiple)</label>
-                <div class="col-md-4">
-                    <select id="selectmultiple_console" name="selectmultiple" class="form-control" multiple="multiple">
-                        <option value="1">NES</option>
-                        <option value="2">SNES</option>
-                    </select>
+            <div id="formphase1">
+
+                <!-- Select Consoles -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="selectmultiple_console">Select Platforms (hold Command to
+                        select
+                        multiple)</label>
+                    <div class="col-md-4">
+                        <select id="selectmultiple_console" name="selectmultiple" class="form-control"
+                            multiple="multiple">
+                            <option value="1">NES</option>
+                            <option value="2">SNES</option>
+                        </select>
+                    </div>
                 </div>
+
+                <br>
+
+                <!-- Select Genres -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="selectmultiple_genre">Select Year (hold Command to select
+                        multiple)</label>
+                    <div class="col-md-4">
+                        <select id="selectmultiple_genre" name="selectmultiple" class="form-control"
+                            multiple="multiple">
+                            <option value="1">Zelda</option>
+                            <option value="2">Mario</option>
+                        </select>
+                    </div>
+                </div>
+
+                <br>
+
+                <!-- Select Years -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="selectmultiple_year">Select Year (hold Command to select
+                        multiple)</label>
+                    <div class="col-md-4">
+                        <select id="selectmultiple_year" name="selectmultiple" class="form-control" multiple="multiple">
+                            <option value="1">Zelda</option>
+                            <option value="2">Mario</option>
+                        </select>
+                    </div>
+                </div>
+
+                <br>
+
+                <!-- Button -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="Submit_for_games"></label>
+                    <div class="col-md-4">
+                        <button onclick="filter_games('game_filter', 'phase1')" id="Submit_for_games" class="btn btn-primary">Get
+                            Games</button>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="clear_reponses"></label>
+                    <div class="col-md-4">
+                        <button onclick="clear_responses()" id="clear_reponses" class="btn btn-primary">Clear Above
+                            Selections</button>
+                    </div>
+                </div>
+
             </div>
 
             <br>
 
-            <!-- Select Genres -->
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="selectmultiple_genre">Select Year (hold Command to select
-                    multiple)</label>
-                <div class="col-md-4">
-                    <select id="selectmultiple_genre" name="selectmultiple" class="form-control" multiple="multiple">
-                        <option value="1">Zelda</option>
-                        <option value="2">Mario</option>
-                    </select>
+            <div id="formphase2" style="display: none;">
+
+                <!-- Select Games -->
+                <div id="games" class="form-group">
+                    <label class="col-md-4 control-label" for="selectmultiple_game">Filter Games (hold Command to
+                        select
+                        multiple)</label>
+                    <div class="col-md-4">
+                        <select id="selectmultiple_game" name="selectmultiple" class="form-control" multiple="multiple">
+                            <option value="1">Zelda</option>
+                            <option value="2">Mario</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <br>
+                <br>
 
-            <!-- Select Years -->
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="selectmultiple_year">Select Year (hold Command to select
-                    multiple)</label>
-                <div class="col-md-4">
-                    <select id="selectmultiple_year" name="selectmultiple" class="form-control" multiple="multiple">
-                        <option value="1">Zelda</option>
-                        <option value="2">Mario</option>
-                    </select>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="Getme_challenges"></label>
+                    <div class="col-md-4">
+                        <button onclick="filter_games('game_filter', 'phase2')" id="Getme_challenges" class="btn btn-primary">Get
+                            Challenges</button>
+                    </div>
                 </div>
-            </div>
 
-            <br>
+                <br>
 
-            <!-- Button -->
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="Submit_for_games"></label>
-                <div class="col-md-4">
-                    <button onclick="filter_games('game_filter')" id="Submit_for_games" class="btn btn-primary">Get
-                        Games</button>
+                <!-- Select Challenge Duration -->
+                <div id="challenges" class="form-group">
+                    <label class="col-md-4 control-label" for="selectmultiple_challenge_duration">Filter Challenge
+                        Duration</label>
+                    <div class="col-md-4">
+                        <select id="selectmultiple_challenge_duration" name="selectmultiple" class="form-control"
+                            multiple="multiple">
+                            <option value="1">Zelda</option>
+                            <option value="2">Mario</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <br>
+                <br>
 
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="clear_reponses"></label>
-                <div class="col-md-4">
-                    <button onclick="clear_responses()" id="clear_reponses" class="btn btn-primary">Clear Above
-                        Selections</button>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="getme_into_the_game"></label>
+                    <div class="col-md-4">
+                        <button onclick="filter_games('handoff_to_game', 'phase3')" id="getme_into_the_game"
+                            class="btn btn-primary">Get
+                            Challenges</button>
+                    </div>
                 </div>
-            </div>
 
-            <br>
-
-            <!-- Select Games -->
-            <div id="games" class="form-group">
-                <label class="col-md-4 control-label" for="selectmultiple_game">Filter Games (hold Command to select
-                    multiple)</label>
-                <div class="col-md-4">
-                    <select id="selectmultiple_game" name="selectmultiple" class="form-control" multiple="multiple">
-                        <option value="1">Zelda</option>
-                        <option value="2">Mario</option>
-                    </select>
-                </div>
-            </div>
-
-            <br>
-
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="Getme_challenges"></label>
-                <div class="col-md-4">
-                    <button onclick="filter_games('game_filter')" id="Getme_challenges" class="btn btn-primary">Get
-                        Challenges</button>
-                </div>
-            </div>
-
-            <br>
-
-            <!-- Select Challenge Duration -->
-            <div id="challenges" class="form-group">
-                <label class="col-md-4 control-label" for="selectmultiple_challenge_duration">Filter Games (hold Command
-                    to
-                    select multiple)</label>
-                <div class="col-md-4">
-                    <select id="selectmultiple_challenge_duration" name="selectmultiple" class="form-control"
-                        multiple="multiple">
-                        <option value="1">Zelda</option>
-                        <option value="2">Mario</option>
-                    </select>
-                </div>
-            </div>
-
-            <br>
-
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="getme_into_the_game"></label>
-                <div class="col-md-4">
-                    <button onclick="filter_games('handoff_to_game')" id="getme_into_the_game"
-                        class="btn btn-primary">Get
-                        Challenges</button>
-                </div>
             </div>
 
 
         </div>
 
         <!-- <div id="gamepart" style="display: none;"> -->
-        <div id="gamepart"> 
+        <div id="gamepart" style="display:none;">
 
             <h2>Configure the game</h2>
 
@@ -170,8 +169,8 @@
             <div class="form-group">
                 <label class="col-md-4 control-label" for="players">Number of Players</label>
                 <div class="col-md-4">
-                    <input id="players" name="textinput" value="1" min="1" max="8" type="number" placeholder="placeholder"
-                        class="form-control input-md">
+                    <input id="players" name="textinput" value="1" min="1" max="8" type="number"
+                        placeholder="placeholder" class="form-control input-md">
                     <span class="help-block">help</span>
                 </div>
             </div>
@@ -181,8 +180,8 @@
                 <div class="form-group">
                     <label class="col-md-4 control-label" for="name_for_player_0">Player 0's Name:</label>
                     <div class="col-md-4">
-                        <input id="name_for_player_0" name="textinput" value="Player 0" type="text" placeholder="placeholder"
-                            class="form-control input-md">
+                        <input id="name_for_player_0" name="textinput" value="Player 0" type="text"
+                            placeholder="placeholder" class="form-control input-md">
                         <span class="help-block">help</span>
                     </div>
                 </div>
@@ -194,10 +193,23 @@
             <div class="form-group">
                 <label class="col-md-4 control-label" for="getme_into_the_gameloop"></label>
                 <div class="col-md-4">
-                    <button onclick="gamestartup()" id="getme_into_the_gameloop"
-                        class="btn btn-primary">Start the Game!</button>
+                    <button onclick="gamestartup()" id="getme_into_the_gameloop" class="btn btn-primary">Start
+                        the Game!</button>
                 </div>
             </div>
+
+            <table class="table">
+                <thead>
+                  <tr id="player_headings">
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr id="player_scores">
+                    <th scope="row">1</th>
+                    
+                  </tr>
+                </tbody>
+              </table>
 
 
             <h3>Debug Text Goes Below</h3>
@@ -212,16 +224,15 @@
             <div class="form-group">
                 <label class="col-md-4 control-label" for="Firstonewon"></label>
                 <div class="col-md-4">
-                    <button onclick="winner(0)" id="Firstonewon"
-                        class="btn btn-primary">Player 0 Wins!</button>
+                    <button onclick="winner(0)" id="Firstonewon" class="btn btn-primary">Player 0 Wins!</button>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-md-4 control-label" for="Secondonewon"></label>
                 <div class="col-md-4">
-                    <button onclick="winner(1)" id="Secondonewon"
-                        class="btn btn-primary">Player 1 Wins!</button>
+                    <button onclick="winner(1)" id="Secondonewon" class="btn btn-primary">Player 1
+                        Wins!</button>
                 </div>
             </div>
 
@@ -234,9 +245,12 @@
         <br>
 
 
-        <button onclick="ping()">Ping Server</button>
+        <!-- <button onclick="ping()">Ping Server</button> -->
 
     </div>
+
+    <!-- Code to manage client-server relationship goes here -->
+    <script src="clientcode.js"></script>
 
     <script>
         function clear_responses() {
@@ -263,13 +277,10 @@
         //     a.addEventListener('change', filter_games, false);
         // });
 
-       
-        
+
+
         let a = document.getElementById("players");
         a.addEventListener('change', add_player_inputs, false);
-       
-
-
     </script>
 
 </body>

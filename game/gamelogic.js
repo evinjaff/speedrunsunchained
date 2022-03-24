@@ -41,6 +41,19 @@ class Game {
 
 }
 
+function update_score(player_index, new_score){
+    //TODO: implement this
+
+    game_global.players[player_index].score = new_score;
+
+    //update HTML elements
+
+    //TODO, figure out which DOM element this correlates to
+
+    console.log(game_global);
+
+}
+
 
 
 
@@ -55,6 +68,36 @@ function gamestartup(){
     game_global = new Game(3, global_num_players);
 
     console.log(game_global)
+
+    //Let's construct a score table with this
+
+    document.getElementById("score_table");
+
+    game_global.players.forEach(player => {
+
+        console.log(player);
+        //construct table heading
+        table_entry = document.createElement("th");
+
+        table_entry.innerHTML = player.name;
+
+        table_entry.scope="col";
+
+        document.getElementById("player_headings").appendChild(table_entry);
+
+        table_score = document.createElement("th");
+
+        table_score.innerHTML = "0";
+
+        //To update the score, we'll have to build in a function to do this.
+
+        table_score.scope="col";
+
+
+    });
+
+
+
 
     //Let's build a challenge map of all the matchups
 
@@ -166,7 +209,7 @@ function setup_next_round(){
     //Appearnce stuff - will be prettified eventually
     log_to_screen(`Round ${game_global.currentround+1} is ${player0.name} vs ${player1.name}
     
-    Your challenge is to ${challenge_to_play.challenge_title}
+    Your challenge is to ${challenge_to_play.challenge_title} in ${challenge_to_play.game_associated.title} (${challenge_to_play.game_associated.year}) for ${challenge_to_play.game_associated.console}
     `)
 
     document.getElementById("Firstonewon").innerHTML  = player0.name + " wins!";
@@ -181,10 +224,15 @@ function winner(id){
     //TODO: Do the minimal logic thing eventually
     //This will increment the respective scores
     if(id === 0){
-        game_global.players[player0.index].score++;
+
+
+        //game_global.players[player0.index].score++;
+
+        update_score( player0.index, game_global.players[player0.index].score + 1);
     }
     else{
-        game_global.players[player1.index].score++;
+        update_score( player1.index, game_global.players[player1.index].score + 1);
+        //game_global.players[player1.index].score++;
     }
 
     console.log(game_global.players);
@@ -266,10 +314,10 @@ function log_to_screen(thing){ document.getElementById("uiconsole").innerHTML = 
 //Random number in a range
 function getRandomArbitrary(min, max) { return Math.random() * (max - min) + min;}
 
- /**Array shift function that protects overshifted entries by adding them to the begining
+/**Array shift function that protects overshifted entries by adding them to the begining
        * @param {Object[]} array The array to be shifted 
        * @param {int} n The amount of entries to shift it by
-      */
+*/
 function shiftarrsafe(array, n){
 //edge case - n is bigger than the size
 switch(n){

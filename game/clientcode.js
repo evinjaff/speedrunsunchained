@@ -3,6 +3,8 @@ var socketio = io.connect();
 
 let globaldebug;
 
+let global_phase = "";
+
 let global_challenges = [];
 
 let global_num_players = 1;
@@ -12,14 +14,21 @@ let global_num_players = 1;
 
 //Ask the server for metadata filters
 function setup() {
+
+    //Revert the hidden styles
+
+    document.getElementById("formphase1").style = "";
+    document.getElementById("formphase2").style = "display: none;";
+
     socketio.emit("setup_filters", {
         "isEmpty": true
     });
 }
 
 //This function takes the data from the form and generates queries to update the game filter.
-function filter_games(type) {
+function filter_games(type, phase) {
 
+    global_phase = phase;
 
     //If there's already queries being returned, let's keep going
 
@@ -97,6 +106,7 @@ function reusable_query_getter(attribute_JSON_field, attribute_HTML_id, passthro
 }
 
 
+
 //utility function to retun array from select values
 function getSelectValues(select) {
     var result = [];
@@ -132,6 +142,23 @@ socketio.on("setup_filters_callback", function (data) {
         document.getElementById("challengesfound").innerHTML = data['found_challenges'] + " challenges found";
     } else {
         document.getElementById("challengesfound").innerHTML = "";
+        
+    }
+
+    if(global_phase === "phase1" && data['found_games'] != undefined){
+        document.getElementById("formphase2").style = "";
+    }
+
+    //Let's call a reset if the query is "overconstrained" and returns not enough records
+    if(data['found_challenges'] === 0 || data['found_games'] === 0){
+        alert("Error: Your filters are overconstrained. No games or challenges exist for your selection");
+
+        //Invoke a reset
+
+        setup();
+
+
+
     }
 
     //This handles Console callback
@@ -171,25 +198,30 @@ socketio.on("game_handoff_callback", function(data){
 
     console.log(global_challenges);
 
+    //TODO: Change these to DOM manipulation
+
     //Make the form invisible
     document.getElementById("form_part").style = "display: none;";
     //Make it visible
     document.getElementById("gamepart").style = "";
 
+    //Remove the game & challenge status indicator
+
+    document.getElementById("recordsfound").style = "display: none;";
+
+    document.getElementById("challengesfound").style = "display: none;";
+
 
     //Is this throttling performance?
+    //Yes for some reason, the site locks up when you call a fisher yates shuffle on the global challenges
     //fisher_yates_shuffle(global_challenges);
     
 })
 
-
-
-
-
-
-function ping() {
-    socketio.emit("ping_server");
-}
+//Might bring this back to verify server integrity
+// function ping() {
+//     socketio.emit("ping_server");
+// }
 
 function form_refresh(html_element_id, socket_data_field, socket_data_passthrough){
     //This handles Genre callback
