@@ -28,6 +28,11 @@ function setup() {
 
 //This function takes the data from the form and generates queries to update the game filter.
 //@ts-check
+/** 
+ *  @param  {string} type - String that indicates the specific call, whether it's to start the game or continue filtering games
+ *  @param {int} phase - An integer representation of what "phase" the game filtering is in
+ *  
+ */
 function filter_games(type, phase) {
 
     global_phase = phase;
@@ -58,29 +63,14 @@ function filter_games(type, phase) {
 
 }
 
-//This function takes the data from the form and generates queries to update the game filter.
-// function get_game_data() {
 
-
-//     //If there's already queries being returned, let's keep going
-
-//     let socketdata = {
-//         "isEmpty": true
-//     }
-
-//     socketdata = reusable_query_getter("genre", "selectmultiple_genre", socketdata);
-//     socketdata = reusable_query_getter("year", "selectmultiple_year", socketdata);
-//     socketdata = reusable_query_getter("console", "selectmultiple_console", socketdata);
-//     socketdata = reusable_query_getter("game", "selectmultiple_game", socketdata);
-//     socketdata = reusable_query_getter("challenge_duration", "selectmultiple_challenge_duration", socketdata);
-
-//     console.log(socketdata)
-
-//     //Once this happens, we don't need websockets anymore -- yay!!
-//     socketio.emit("get_game_filter", socketdata);
-// }
 
 //@ts-check
+/** 
+ *  @param  {string} attribute_JSON_field - The relevant field in the JSON returned by the socketio data
+ *  @param {string} attribute_HTML_id - HTML ID of the select tag
+ *  @param {any} passthrough_socketdata - Passes through the socket.io response to read the server response
+ */
 function reusable_query_getter(attribute_JSON_field, attribute_HTML_id, passthrough_socketdata) {
 
     let year = document.getElementById(attribute_HTML_id)
@@ -111,6 +101,11 @@ function reusable_query_getter(attribute_JSON_field, attribute_HTML_id, passthro
 
 //utility function to retun array from select values
 //@ts-check
+/**
+ * 
+ * @param {HTMLElement} select - A reference to the HTML select 
+ * @returns {string[]} - A string array of the options inputted into the HTML select
+ */
 function getSelectValues(select) {
     var result = [];
     var options = select && select.options;
@@ -221,12 +216,13 @@ socketio.on("game_handoff_callback", function(data){
     
 })
 
-//Might bring this back to verify server integrity
-// function ping() {
-//     socketio.emit("ping_server");
-// }
-
 //@ts-check
+/**
+ * 
+ * @param {string} html_element_id - the id of the HTML select
+ * @param {string} socket_data_field - the JSON field of the socket data you want to add
+ * @param {string} socket_data_passthrough  - the JSON from the socket.io callback
+ */
 function form_refresh(html_element_id, socket_data_field, socket_data_passthrough){
     //This handles Genre callback
     document.getElementById(html_element_id).innerHTML = '';

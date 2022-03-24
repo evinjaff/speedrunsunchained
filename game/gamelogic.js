@@ -97,22 +97,6 @@ function gamestartup(){
 
     });
 
-
-
-
-    //Let's build a challenge map of all the matchups
-
-    //How to do this -- we use the secret santa problem code from the axis game
-
-    //let player_array_1 = structuredClone(game.players);
-
-    //let player_array_2 = structuredClone(game.players);
-
-    //Let's use the Numberphile Secret Santa Problem
-    //https://www.youtube.com/watch?v=GhnCj7Fvqt0
-
-    //screw this, let's just make our matchups one pick
-
     for(let i=0;i<game_global.matchups.length;i++){
         game_global.matchups[i] = add_matchup(i, game_global);
     }
@@ -286,20 +270,7 @@ function add_matchup(matchup_index, game_object){
 
         //Grab the first entry and remove it
 
-        // let pair_1 = Playersdeepcopy.splice(0,1)[0];
-
-
-        // let removal_index  =  Math.floor(Playersdeepcopy.length * Math.random());
-
-        // console.log(removal_index)
-
-        // let pair_2 = Playersdeepcopy.splice(removal_index, removal_index+1)[0];
-
-        // console.log("pair 1: ", pair_1, " pair 2: ", pair_2);
-
         fisher_yates_shuffle(Playersdeepcopy);
-
-
 
         matchups[matchups.length] = [ Playersdeepcopy.pop(), Playersdeepcopy.pop() ];
 
@@ -313,7 +284,7 @@ function add_matchup(matchup_index, game_object){
 
 
 //macros
-//
+
 //@ts-check
 function log_to_screen(thing){ document.getElementById("uiconsole").innerHTML = thing;}
 
@@ -327,7 +298,6 @@ function getRandomArbitrary(min, max) { return Math.random() * (max - min) + min
 */
 //@ts-check
 function shiftarrsafe(array, n){
-//edge case - n is bigger than the size
 switch(n){
     case 0:
         //it's the same
