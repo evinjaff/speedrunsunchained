@@ -561,6 +561,7 @@ io.sockets.on("connection", function (socket) {
 
 });
 
+//@ts-check
 function lookup_key(key) {
 
     switch (key) {

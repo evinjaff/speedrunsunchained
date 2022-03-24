@@ -41,6 +41,7 @@ class Game {
 
 }
 
+//@ts-check
 function update_score(player_index, new_score){
     //TODO: implement this
 
@@ -56,7 +57,7 @@ function update_score(player_index, new_score){
 
 
 
-
+//@ts-check
 function gamestartup(){
 
     log_to_screen("starting game...")
@@ -152,6 +153,7 @@ function gamestartup(){
 }
 
 //Reusable function to increment the game as it goes on
+//@ts-check
 function setup_next_round(){
 
     //Before we start the steps we need to make sure we're at the right milestones
@@ -218,6 +220,7 @@ function setup_next_round(){
 }
 
 //id being which player won, 0 or 1
+//@ts-check
 function winner(id){
 
 
@@ -245,6 +248,7 @@ function winner(id){
 }
 
 //This works for a deep copy of arrays with a forEach method
+//@ts-check
 function structuredClone_emulated_foreach_array(structure_to_clone){
 
     let deep_copied_array = []
@@ -257,6 +261,7 @@ function structuredClone_emulated_foreach_array(structure_to_clone){
 
 }
 
+//@ts-check
 function add_matchup(matchup_index, game_object){
     let Playersdeepcopy = [];
     
@@ -309,15 +314,18 @@ function add_matchup(matchup_index, game_object){
 
 //macros
 //
+//@ts-check
 function log_to_screen(thing){ document.getElementById("uiconsole").innerHTML = thing;}
 
 //Random number in a range
+//@ts-check
 function getRandomArbitrary(min, max) { return Math.random() * (max - min) + min;}
 
 /**Array shift function that protects overshifted entries by adding them to the begining
        * @param {Object[]} array The array to be shifted 
        * @param {int} n The amount of entries to shift it by
 */
+//@ts-check
 function shiftarrsafe(array, n){
 //edge case - n is bigger than the size
 switch(n){
@@ -342,6 +350,7 @@ switch(n){
 
 }
 
+//@ts-check
 function fisher_yates_shuffle(array) {
     let currentIndex = array.length,  randomIndex;
   

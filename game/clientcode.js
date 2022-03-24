@@ -13,6 +13,7 @@ let global_num_players = 1;
 
 
 //Ask the server for metadata filters
+//@ts-check
 function setup() {
 
     //Revert the hidden styles
@@ -26,6 +27,7 @@ function setup() {
 }
 
 //This function takes the data from the form and generates queries to update the game filter.
+//@ts-check
 function filter_games(type, phase) {
 
     global_phase = phase;
@@ -78,7 +80,7 @@ function filter_games(type, phase) {
 //     socketio.emit("get_game_filter", socketdata);
 // }
 
-
+//@ts-check
 function reusable_query_getter(attribute_JSON_field, attribute_HTML_id, passthrough_socketdata) {
 
     let year = document.getElementById(attribute_HTML_id)
@@ -108,6 +110,7 @@ function reusable_query_getter(attribute_JSON_field, attribute_HTML_id, passthro
 
 
 //utility function to retun array from select values
+//@ts-check
 function getSelectValues(select) {
     var result = [];
     var options = select && select.options;
@@ -223,6 +226,7 @@ socketio.on("game_handoff_callback", function(data){
 //     socketio.emit("ping_server");
 // }
 
+//@ts-check
 function form_refresh(html_element_id, socket_data_field, socket_data_passthrough){
     //This handles Genre callback
     document.getElementById(html_element_id).innerHTML = '';
@@ -236,6 +240,7 @@ function form_refresh(html_element_id, socket_data_field, socket_data_passthroug
     })
 }
 
+//@ts-check
 function add_player_inputs(){
 
     let num_players = document.getElementById("players").value
