@@ -1,7 +1,7 @@
 {
-  "name": "axisgame",
+  "name": "speedrunsunchained",
   "version": "1.0.0",
-  "description": "",
+  "description": "A speedrunning party game",
   "main": "node_server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evinjaff/axisgame.git"
+    "url": "git+https://github.com/evinjaff/speedrunsunchained.git"
   },
   "author": "evinjaff",
-  "license": "MIT",
+  "license": "BSD-Clause 3",
   "bugs": {
-    "url": "https://github.com/evinjaff/axisgame/issues"
+    "url": "https://github.com/evinjaff/speedrunsunchained/issues"
   },
-  "homepage": "https://github.com/evinjaff/axisgame#readme",
+  "homepage": "https://github.com/evinjaff/speedrunsunchained#readme",
   "dependencies": {
     "http": "^0.0.1-security",
     "mime": "^3.0.0",
