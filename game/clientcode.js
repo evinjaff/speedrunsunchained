@@ -145,6 +145,12 @@ socketio.on("setup_filters_callback", function (data) {
 
     if(global_phase === "phase1" && data['found_games'] != undefined){
         document.getElementById("formphase2").style = "";
+
+        document.getElementById("Submit_for_games").style.display = "none";
+
+        document.getElementById("clear_reponses_1").style.display = "none";
+
+
     }
 
     //Let's call a reset if the query is "overconstrained" and returns not enough records

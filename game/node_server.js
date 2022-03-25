@@ -19,7 +19,6 @@ const {
 
 const port = 3456;
 const file = "client.html";
-const master = "master.html";
 
 /* Database Setup */
 
