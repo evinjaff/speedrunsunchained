@@ -42,12 +42,22 @@ class Game {
 }
 
 //@ts-check
+/**
+ * 
+ * @param {*} player_index - index of the relevant player
+ * @param {*} new_score - new score of the player
+ */
 function update_score(player_index, new_score){
     //TODO: implement this
 
     game_global.players[player_index].score = new_score;
 
     //update HTML elements
+
+    document.getElementById(game_global.players[player_index].name + "_score").innerHTML = new_score;
+
+    //TODO: When a player is in the lead, hilight them
+
 
     //TODO, figure out which DOM element this correlates to
 
@@ -74,6 +84,10 @@ function gamestartup(){
 
     document.getElementById("score_table");
 
+    //Wipe off residual ones
+
+    removeAllChildNodes("player_scores")
+
     game_global.players.forEach(player => {
 
         console.log(player);
@@ -82,17 +96,31 @@ function gamestartup(){
 
         table_entry.innerHTML = player.name;
 
+        table_entry.id = player.name;
+
         table_entry.scope="col";
 
         document.getElementById("player_headings").appendChild(table_entry);
 
-        table_score = document.createElement("th");
+        score_entry = document.createElement("th");
 
-        table_score.innerHTML = "0";
+        score_entry.innerHTML = 0;
+
+        score_entry.scope="row";
+
+        //let's also make sure that we can recall who's element goes where
+
+        score_entry.id = player.name + "_score";
+
+        document.getElementById("player_scores").appendChild(score_entry);
+
+        //table_score = document.createElement("th");
+
+        //table_score.innerHTML = "0";
 
         //To update the score, we'll have to build in a function to do this.
 
-        table_score.scope="col";
+        //table_score.scope="col";
 
 
     });
@@ -135,6 +163,21 @@ function gamestartup(){
 
 
 }
+
+
+/**
+ * 
+ * @param {string} parent_html_id - html id of the parent element 
+ */
+function removeAllChildNodes(parent_html_id) {
+
+    let parent = document.getElementById(parent_html_id)
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
+
 
 //Reusable function to increment the game as it goes on
 //@ts-check

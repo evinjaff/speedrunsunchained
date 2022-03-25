@@ -14,6 +14,8 @@
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
     </script>
 
+    <link rel="stylesheet" href="stylesheet.css">
+
 
     <title>Speedruns Unchained</title>
 
@@ -38,10 +40,10 @@
 
                 <!-- Select Consoles -->
                 <div class="form-group">
-                    <label class="col-md-4 control-label" for="selectmultiple_console">Select Platforms (hold Command to
+                    <label class="col- control-label" for="selectmultiple_console">Select Platforms (hold Command to
                         select
                         multiple)</label>
-                    <div class="col-md-4">
+                    <div class="col-">
                         <select id="selectmultiple_console" name="selectmultiple" class="form-control"
                             multiple="multiple">
                             <option value="1">NES</option>
@@ -54,9 +56,9 @@
 
                 <!-- Select Genres -->
                 <div class="form-group">
-                    <label class="col-md-4 control-label" for="selectmultiple_genre">Select Year (hold Command to select
+                    <label class="col- control-label" for="selectmultiple_genre">Select Genre (hold Command to select
                         multiple)</label>
-                    <div class="col-md-4">
+                    <div class="col-">
                         <select id="selectmultiple_genre" name="selectmultiple" class="form-control"
                             multiple="multiple">
                             <option value="1">Zelda</option>
@@ -69,9 +71,9 @@
 
                 <!-- Select Years -->
                 <div class="form-group">
-                    <label class="col-md-4 control-label" for="selectmultiple_year">Select Year (hold Command to select
+                    <label class="col- control-label" for="selectmultiple_year">Select Year (hold Command to select
                         multiple)</label>
-                    <div class="col-md-4">
+                    <div class="col-">
                         <select id="selectmultiple_year" name="selectmultiple" class="form-control" multiple="multiple">
                             <option value="1">Zelda</option>
                             <option value="2">Mario</option>
@@ -82,9 +84,10 @@
                 <br>
 
                 <!-- Button -->
+                <!-- This will dissapear after phase 1 starts -->
                 <div class="form-group">
-                    <label class="col-md-4 control-label" for="Submit_for_games"></label>
-                    <div class="col-md-4">
+                    <label class="col- control-label" for="Submit_for_games"></label>
+                    <div class="col-">
                         <button onclick="filter_games('game_filter', 'phase1')" id="Submit_for_games" class="btn btn-primary">Get
                             Games</button>
                     </div>
@@ -93,9 +96,9 @@
                 <br>
 
                 <div class="form-group">
-                    <label class="col-md-4 control-label" for="clear_reponses"></label>
-                    <div class="col-md-4">
-                        <button onclick="clear_responses()" id="clear_reponses" class="btn btn-primary">Clear Above
+                    <label class="col- control-label" for="clear_reponses_1"></label>
+                    <div class="col-">
+                        <button onclick="clear_responses()" id="clear_reponses_1" class="btn btn-primary">Clear Above
                             Selections</button>
                     </div>
                 </div>
@@ -108,10 +111,10 @@
 
                 <!-- Select Games -->
                 <div id="games" class="form-group">
-                    <label class="col-md-4 control-label" for="selectmultiple_game">Filter Games (hold Command to
+                    <label class="col- control-label" for="selectmultiple_game">Filter Games (hold Command to
                         select
                         multiple)</label>
-                    <div class="col-md-4">
+                    <div class="col-">
                         <select id="selectmultiple_game" name="selectmultiple" class="form-control" multiple="multiple">
                             <option value="1">Zelda</option>
                             <option value="2">Mario</option>
@@ -121,21 +124,13 @@
 
                 <br>
 
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="Getme_challenges"></label>
-                    <div class="col-md-4">
-                        <button onclick="filter_games('game_filter', 'phase2')" id="Getme_challenges" class="btn btn-primary">Get
-                            Challenges</button>
-                    </div>
-                </div>
-
                 <br>
 
                 <!-- Select Challenge Duration -->
                 <div id="challenges" class="form-group">
-                    <label class="col-md-4 control-label" for="selectmultiple_challenge_duration">Filter Challenge
+                    <label class="col- control-label" for="selectmultiple_challenge_duration">Filter Challenge
                         Duration</label>
-                    <div class="col-md-4">
+                    <div class="col-">
                         <select id="selectmultiple_challenge_duration" name="selectmultiple" class="form-control"
                             multiple="multiple">
                             <option value="1">Zelda</option>
@@ -147,11 +142,27 @@
                 <br>
 
                 <div class="form-group">
-                    <label class="col-md-4 control-label" for="getme_into_the_game"></label>
-                    <div class="col-md-4">
-                        <button onclick="filter_games('handoff_to_game', 'phase3')" id="getme_into_the_game"
-                            class="btn btn-primary">Get
+                    <label class="col- control-label" for="clear_reponses_1"></label>
+                    <div class="col-">
+                        <button onclick="clear_responses()" id="clear_reponses_1" class="btn btn-primary">Clear Above
+                            Selections</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col- control-label" for="Getme_challenges"></label>
+                    <div class="col-">
+                        <button onclick="filter_games('game_filter', 'phase2')" id="Getme_challenges" class="btn btn-primary">Get
                             Challenges</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col- control-label" for="getme_into_the_game"></label>
+                    <div class="col-">
+                        <button onclick="filter_games('handoff_to_game', 'phase3')" id="getme_into_the_game"
+                            class="btn btn-primary">Start
+                            The Game</button>
                     </div>
                 </div>
 
@@ -167,8 +178,8 @@
 
             <!-- Text input-->
             <div class="form-group">
-                <label class="col-md-4 control-label" for="players">Number of Players</label>
-                <div class="col-md-4">
+                <label class="col- control-label" for="players">Number of Players</label>
+                <div class="col-">
                     <input id="players" name="textinput" value="1" min="1" max="8" type="number"
                         placeholder="placeholder" class="form-control input-md">
                     <span class="help-block">help</span>
@@ -178,8 +189,8 @@
             <div id="nameplayers">
 
                 <div class="form-group">
-                    <label class="col-md-4 control-label" for="name_for_player_0">Player 0's Name:</label>
-                    <div class="col-md-4">
+                    <label class="col- control-label" for="name_for_player_0">Player 0's Name:</label>
+                    <div class="col-">
                         <input id="name_for_player_0" name="textinput" value="Player 0" type="text"
                             placeholder="placeholder" class="form-control input-md">
                         <span class="help-block">help</span>
@@ -191,8 +202,8 @@
             <br>
 
             <div class="form-group">
-                <label class="col-md-4 control-label" for="getme_into_the_gameloop"></label>
-                <div class="col-md-4">
+                <label class="col- control-label" for="getme_into_the_gameloop"></label>
+                <div class="col-">
                     <button onclick="gamestartup()" id="getme_into_the_gameloop" class="btn btn-primary">Start
                         the Game!</button>
                 </div>
@@ -222,15 +233,15 @@
 
 
             <div class="form-group">
-                <label class="col-md-4 control-label" for="Firstonewon"></label>
-                <div class="col-md-4">
+                <label class="col- control-label" for="Firstonewon"></label>
+                <div class="col-">
                     <button onclick="winner(0)" id="Firstonewon" class="btn btn-primary">Player 0 Wins!</button>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-md-4 control-label" for="Secondonewon"></label>
-                <div class="col-md-4">
+                <label class="col- control-label" for="Secondonewon"></label>
+                <div class="col-">
                     <button onclick="winner(1)" id="Secondonewon" class="btn btn-primary">Player 1
                         Wins!</button>
                 </div>
