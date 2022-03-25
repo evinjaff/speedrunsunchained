@@ -44,8 +44,8 @@ class Game {
 //@ts-check
 /**
  * 
- * @param {*} player_index - index of the relevant player
- * @param {*} new_score - new score of the player
+ * @param {int} player_index - index of the relevant player
+ * @param {int} new_score - new score of the player
  */
 function update_score(player_index, new_score){
     //TODO: implement this
