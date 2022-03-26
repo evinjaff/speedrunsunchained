@@ -19,12 +19,30 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """
-        Return the last 20 published Games (not including those set to be
+        Return the last 200 published Games (not including those set to be
         published in the future).
         """
         return Game.objects.filter(
             pub_date__lte=timezone.now()
-        ).order_by('-pub_date')[:20]
+        ).order_by('-pub_date')[:200]
+
+class GameSearchView(generic.ListView):
+    template_name = 'polls/index.html'
+    context_object_name = 'latest_Game_list'
+
+    
+
+    def get_queryset(self):
+        """
+        Return the last 200 published Games (with the string).
+        """
+        print(self.__dict__.keys())
+
+        print(self.kwargs['search_string'])
+
+        return Game.objects.filter(
+            pub_date__lte=timezone.now(), game_title__contains=self.kwargs['search_string']
+        ).order_by('-pub_date')[:200]
 
 
 class DetailView(generic.DetailView):
