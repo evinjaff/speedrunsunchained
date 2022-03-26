@@ -141,3 +141,5 @@ game/node_modules/
 community/uploaded_files/
 
 *.sqbpro
+
+*.sqlite3
