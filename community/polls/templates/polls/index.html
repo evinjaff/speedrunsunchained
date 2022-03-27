@@ -9,6 +9,36 @@
   <input type="submit" value="Add Game">
 </form>
 
+<form id="search_form" action="/polls/search/" method="GET">
+  {% csrf_token %}
+  <input id="search_query" name="search_string" type="text" value="Find Game">
+  <input id="form_submit_button" style="display: none;" type="submit" value="Search">
+</form>
+
+<input id="submit_button" type="button" value="Search">
+
+<script>
+
+function submit_real_form(){
+  //alert("form submission");
+  let url = "/polls/search/" + document.getElementById("search_query").value;
+
+  console.log(url)
+
+  document.getElementById("search_form").setAttribute("action", url);
+
+  document.getElementById("search_form").submit();
+
+}
+
+document.getElementById("submit_button").addEventListener('click', submit_real_form, true);
+
+
+
+</script>
+
+
+
 <h1>Speedruns Unchained Community</h1>
 
 {% if latest_Game_list %}
@@ -18,5 +48,5 @@
   {% endfor %}
   </ul>
 {% else %}
-  <p>No polls are available.</p>
+  <p>No games match your search "{{ request.GET.search_string }}"</p>
 {% endif %}
