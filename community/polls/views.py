@@ -101,6 +101,10 @@ class ChallengeCreateView(CreateView):
 
     def get_initial(self, *args, **kwargs):
         print('get_initial called')
+        print(self.kwargs)
+
+        self.pk = self.kwargs['pk']
+
         initial = super().get_initial(**kwargs)
         initial['challenge_title'] = 'Enter Game Title'
         return initial
@@ -108,13 +112,13 @@ class ChallengeCreateView(CreateView):
     def form_valid(self, form):
         print('form_valid called')
 
-        Challenge.objects.filter(game_id=form.instance.game)
+        print(Challenge.objects.filter(game_id=self.pk))
 
-        print("Game: ", form.instance.game)
+        form.instance.game_id = self.pk
 
-        self.pk = Game.objects.filter(game_title=form.instance.game.game_title)[0].id
+        # self.pk = Game.objects.filter(game_title=form.instance.game.game_title)[0].id
 
-        self.unique_challenge_id = len(Challenge.objects.filter(game=form.instance.game)) + 1
+        self.unique_challenge_id = len(Challenge.objects.filter(game=self.pk)) + 1
 
         print("pk {} chal: {}".format(self.pk, self.unique_challenge_id))
 
