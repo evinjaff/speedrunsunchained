@@ -1,0 +1,75 @@
+{% load static %}
+
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+
+<h1>Speedruns Unchained Community</h1>
+
+<form action="/polls/addgame/" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Add Game">
+</form>
+
+<form id="search_form" action="/polls/search/" method="GET">
+  <!-- {% csrf_token %} -->
+  <input id="search_query" placeholder="Search for a Game" name="search_string" type="text" value="{{request.GET.search_string}}">
+  {{extradat}}
+
+  <select name="genre" placeholder="Show only for this genre"> 
+    <option value="None_Selected">Filter by a Genre</option> 
+    {% for game in genre_set %} 
+    <option name="genre" value="{{ game }}">{{ game }}</option> 
+    {% endfor %} 
+  </select>
+
+  <select name="console" placeholder="Show only for this console"> 
+    <option value="None_Selected">Filter by a Console</option> 
+    {% for game in console_set %} 
+    <option name="console" value="{{ game }}">{{ game }}</option> 
+    {% endfor %} 
+  </select>
+
+  <input id="form_submit_button" style="display: none;" type="submit" value="Search">
+</form>
+
+<input id="submit_button" type="button" value="Search">
+
+<!-- Oh shit it's a JQuery dependency -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+<script>
+
+  function submit_real_form(){
+    let url = "/polls/search/" + document.getElementById("search_query").value;
+
+    console.log(url)
+
+    document.getElementById("search_form").setAttribute("action", url);
+
+    document.getElementById("search_form").submit();
+  }
+
+
+  var preventSubmit = function(event) {
+        if(event.keyCode == 13) {
+            console.log("Nice knife");
+            event.preventDefault();
+            
+            submit_real_form()
+
+            return false;
+        }
+    }
+    $("#search_form").keypress(preventSubmit);
+    $("#search_form").keydown(preventSubmit);
+    $("#search_form").keyup(preventSubmit);
+
+document.getElementById("submit_button").addEventListener('click', submit_real_form, true);
+
+
+
+</script>
+
+
+
