@@ -86,7 +86,6 @@ class GameCreateView(CreateView):
 class ChallengeCreateView(CreateView):
     model = Challenge
     fields = [
-    'game',
 	'challenge_title',
 	'challenge_description',
 	'difficulty'

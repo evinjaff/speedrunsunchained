@@ -46,6 +46,7 @@ function filter_games(type, phase) {
     socketdata = reusable_query_getter("genre", "selectmultiple_genre", socketdata);
     socketdata = reusable_query_getter("year", "selectmultiple_year", socketdata);
     socketdata = reusable_query_getter("console", "selectmultiple_console", socketdata);
+    socketdata = reusable_query_getter("publisher", "selectmultiple_challenge_duration", socketdata);
     socketdata = reusable_query_getter("game", "selectmultiple_game", socketdata);
     socketdata = reusable_query_getter("challenge_duration", "selectmultiple_challenge_duration", socketdata);
 
@@ -176,6 +177,8 @@ socketio.on("setup_filters_callback", function (data) {
  
     //This handles Genre callback
     form_refresh("selectmultiple_genre", 'genre', data);
+
+    form_refresh("selectmultiple_publisher", 'publisher', data);
 
 });
 

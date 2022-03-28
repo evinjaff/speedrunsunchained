@@ -126,6 +126,7 @@ io.sockets.on("connection", function (socket) {
         let yearset = new Set();
         let genreset = new Set();
         let titlearr = [];
+        let publisherset = new Set();
         let game_id_array = [];
 
         console.log(data)
@@ -152,6 +153,7 @@ io.sockets.on("connection", function (socket) {
                     genreset.add(row.genre);
                     titlearr[titlearr.length] = row.game_title;
                     game_id_array[game_id_array.length] = row.id;
+                    publisherset.add(row.publisher);
 
 
 
@@ -196,7 +198,8 @@ io.sockets.on("connection", function (socket) {
                         "game_title": titlearr.sort(),
                         "console": custom_sorted_console,
                         "year": Array.from(yearset).sort(),
-                        "genre": custom_sorted_genre
+                        "genre": custom_sorted_genre,
+                        "publisher": Array.from(publisherset).sort()
                     })
                 });
 
@@ -323,6 +326,7 @@ io.sockets.on("connection", function (socket) {
                     titlearr[titlearr.length] = row.game_title;
                     game_id_array[game_id_array.length] = row.id;
                     console.log("game_id_array: ", game_id_array)
+                    publisherset.add(row.publisher);
                     id_map.set(row.id , {"title": row.game_title, "console": row.console, "year": row.year_published})
 
                     counter++;
@@ -491,6 +495,7 @@ io.sockets.on("connection", function (socket) {
 
                         socket.emit("setup_filters_callback", {
                             "game_title": titlearr.sort(),
+                            "publisher": Array.from(publisherset).sort(),
                             "console": custom_sorted_console,
                             "year": Array.from(yearset).sort(),
                             "genre": custom_sorted_genre,
