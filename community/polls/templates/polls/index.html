@@ -12,6 +12,24 @@
 <form id="search_form" action="/polls/search/" method="GET">
   {% csrf_token %}
   <input id="search_query" placeholder="Search for a Game" name="search_string" type="text" value="{{request.GET.search_string}}">
+  {{extradat}}
+
+  <select name="genre" placeholder="Show only for this genre"> 
+    {% for game in genre_set %} 
+    <option>
+      {{ game }}
+    </option> 
+    {% endfor %} 
+  </select>
+
+  <select name="genre" placeholder="Show only for this console"> 
+    {% for game in console_set %} 
+    <option>
+      {{ game }}
+    </option> 
+    {% endfor %} 
+  </select>
+
   <input id="form_submit_button" style="display: none;" type="submit" value="Search">
 </form>
 
