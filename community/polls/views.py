@@ -84,24 +84,28 @@ class GameSearchView(generic.ListView):
 
         print(self.request.GET)
 
-        print(self.request.GET['genre'])
+        print((self.request.GET['console'] == "None_Selected"))
 
-        print(self.request.GET['console'])
+        print((self.request.GET['genre'] == "None_Selected"))
+
         # Don't filter
-        if self.request.GET['genre'] == "None_Selected" and self.request.GET['console'] == "None_Selected":
+        if (self.request.GET['genre'] == "None_Selected") & (self.request.GET['console'] == "None_Selected"):
+            print("fired on first if")
             return Game.objects.filter(
             pub_date__lte=timezone.now(), game_title__contains=self.kwargs['search_string'],
         ).order_by('-pub_date')[:200]
 
         #Filter just genre
-        elif self.request.GET['genre'] != "None_Selected":
-             return Game.objects.filter(
+        elif (self.request.GET['genre'] != "None_Selected") & (self.request.GET['console'] == "None_Selected"):
+            print("fired on second if")
+            return Game.objects.filter(
             pub_date__lte=timezone.now(), game_title__contains=self.kwargs['search_string'],
             genre=self.request.GET['genre']
         ).order_by('-pub_date')[:200]
 
         # Filter just console
-        elif self.request.GET['console'] != "None_Selected":
+        elif (self.request.GET['genre'] == "None_Selected") & (self.request.GET['console'] != "None_Selected"):
+            print("fired on third if")
             return Game.objects.filter(
             pub_date__lte=timezone.now(), game_title__contains=self.kwargs['search_string'],
             console=self.request.GET['console']
@@ -109,6 +113,7 @@ class GameSearchView(generic.ListView):
 
         # Filter Both
         else:
+            print("fired on fourth if")
             return Game.objects.filter(
             pub_date__lte=timezone.now(), game_title__contains=self.kwargs['search_string'],
             console=self.request.GET['console'], genre=self.request.GET['genre']
