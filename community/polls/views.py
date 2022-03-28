@@ -17,6 +17,26 @@ class IndexView(generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'latest_Game_list'
 
+    def get_context_data(self,*args, **kwargs):
+        context = super().get_context_data(*args,**kwargs)
+
+        # Incoming jank code to make a set of types
+
+        genre_set = set()
+        console_set = set()
+
+        # print()
+
+        for game in Game.objects.filter():
+            genre_set.add(game.genre)
+            console_set.add(game.console)
+
+        context['genre_set'] = genre_set
+        context['console_set'] = console_set
+        
+        
+        return context
+
     def get_queryset(self):
         """
         Return the last 200 published Games (not including those set to be
