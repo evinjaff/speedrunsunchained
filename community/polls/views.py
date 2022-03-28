@@ -14,7 +14,10 @@ from .models import Challenge, Game, Comment
 
 
 class IndexView(generic.ListView):
-    template_name = 'polls/index.html'
+
+    # Potential solution to the for loop problem:
+    # https://stackoverflow.com/questions/2466496/select-distinct-values-from-a-table-field
+    template_name = 'polls/frontpage.html'
     context_object_name = 'latest_Game_list'
 
     def get_context_data(self,*args, **kwargs):
@@ -44,25 +47,76 @@ class IndexView(generic.ListView):
         """
         return Game.objects.filter(
             pub_date__lte=timezone.now()
-        ).order_by('-pub_date')[:200]
+        ).order_by('-pub_date')[:20]
 
 class GameSearchView(generic.ListView):
-    template_name = 'polls/index.html'
+    template_name = 'polls/search.html'
     context_object_name = 'latest_Game_list'
+
+    def get_context_data(self,*args, **kwargs):
+        context = super().get_context_data(*args,**kwargs)
+
+        # Incoming jank code to make a set of types
+
+        genre_set = set()
+        console_set = set()
+
+        # print()
+
+        for game in Game.objects.filter():
+            genre_set.add(game.genre)
+            console_set.add(game.console)
+
+        context['genre_set'] = genre_set
+        context['console_set'] = console_set
+        
+        return context
 
     
 
     def get_queryset(self):
         """
-        Return the last 200 published Games (with the string).
+        Return the last 200 published Queried games (with the string).
         """
         print(self.__dict__.keys())
 
-        print(self.kwargs['search_string'])
+        print(self.kwargs)
 
-        return Game.objects.filter(
-            pub_date__lte=timezone.now(), game_title__contains=self.kwargs['search_string']
+        print(self.request.GET)
+
+        print(self.request.GET['genre'])
+
+        print(self.request.GET['console'])
+        # Don't filter
+        if self.request.GET['genre'] == "None_Selected" and self.request.GET['console'] == "None_Selected":
+            return Game.objects.filter(
+            pub_date__lte=timezone.now(), game_title__contains=self.kwargs['search_string'],
         ).order_by('-pub_date')[:200]
+
+        #Filter just genre
+        elif self.request.GET['genre'] != "None_Selected":
+             return Game.objects.filter(
+            pub_date__lte=timezone.now(), game_title__contains=self.kwargs['search_string'],
+            genre=self.request.GET['genre']
+        ).order_by('-pub_date')[:200]
+
+        # Filter just console
+        elif self.request.GET['console'] != "None_Selected":
+            return Game.objects.filter(
+            pub_date__lte=timezone.now(), game_title__contains=self.kwargs['search_string'],
+            console=self.request.GET['console']
+        ).order_by('-pub_date')[:200]
+
+        # Filter Both
+        else:
+            return Game.objects.filter(
+            pub_date__lte=timezone.now(), game_title__contains=self.kwargs['search_string'],
+            console=self.request.GET['console'], genre=self.request.GET['genre']
+        ).order_by('-pub_date')[:200]
+
+       
+
+
 
 
 class DetailView(generic.DetailView):
