@@ -10,23 +10,21 @@
 </form>
 
 <form id="search_form" action="/polls/search/" method="GET">
-  {% csrf_token %}
+  <!-- {% csrf_token %} -->
   <input id="search_query" placeholder="Search for a Game" name="search_string" type="text" value="{{request.GET.search_string}}">
   {{extradat}}
 
   <select name="genre" placeholder="Show only for this genre"> 
+    <option value="None_Selected">Filter by a Genre</option> 
     {% for game in genre_set %} 
-    <option>
-      {{ game }}
-    </option> 
+    <option name="genre" value="{{ game }}">{{ game }}</option> 
     {% endfor %} 
   </select>
 
-  <select name="genre" placeholder="Show only for this console"> 
+  <select name="console" placeholder="Show only for this console"> 
+    <option value="None_Selected">Filter by a Console</option> 
     {% for game in console_set %} 
-    <option>
-      {{ game }}
-    </option> 
+    <option name="console" value="{{ game }}">{{ game }}</option> 
     {% endfor %} 
   </select>
 
