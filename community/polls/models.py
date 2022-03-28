@@ -19,9 +19,10 @@ class Game(models.Model):
 	year_published = models.CharField(default=0,max_length=5)
 	console = models.CharField(default="N/A", max_length=100)
 	genre = models.CharField(default="N/A", max_length=100)
+	publisher = models.CharField(default="N/A", max_length=200)
 	ROM = models.FileField(upload_to=get_upload_file_name, null=True, default="Hello.txt")
 	tagblob = models.TextField(default="None", max_length=400)
-	franchise = models.CharField(default="Unknown", max_length=200)
+	#franchise = models.CharField(default="Unknown", max_length=200)
 
 	def get_absolute_url(self):
 		return reverse('polls:detail', kwargs={'pk': self.pk})
