@@ -20,34 +20,75 @@ This application is also not very scalable in it's present state. In an ideal wo
 
 ## How to run this
 
-The requirements to run the Django application can be found inside the community/requirements.txt file. This .txt file is just a raw export of all my Python packages from pip so if you aren't able to satisfy all the requirements you might still be fine. I would specifically make sure that you run version 4.0.2 of Django and that your installation of Python is new enough to include sqlite 3.9 (NOTE: This will become really important later). After testing enough implementations, I will eventually probably just form a wiki for this.
 
-NOTE: For Django, I would highly recommend you use a virtual environment generated through <a href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a> or the standard python virtualenv.
+### Community Site (Python)
 
-As for Node.js, I surprisingly didn't have any issues. Just run npm install on the game/package.JSON file and you should be good to go.
+#### The Easy Way
+
+If you're running a setup that can support modern versions of python, this should be easy. For setting up the server, I used miniconda because I have a jupyter notebook that I use for importing sample games into the sqlite database. You can use my virtual environment by running this command.
+
+```bash
+conda env create -f data/environment.yml 
+```
+
+Then, you'll have to initialize the SQLite database by running
+
+```bash
+python3 game/manage.py migrate
+```
+
+And then finally, you can run the server using
+
+```bash
+python3 game/manage.py runserver [optional: IP address and port to run on]
+```
+
+
+Once you're past setup and ready to deploy, there's a text file at ```community/requirements.txt``` that you can install using pip. You can then use this package and pm2, cpanel, etc. for deploying your instance.
+
+
+#### The Hard Way
+
+If you're a broke college student like me who can't shell out money for a home server and have a free student version of Azure, you're going to have a hard time running this on legacy OSes because these Python-based web apps are kind of near the bleeding edge compared to your more stock PHP 7, and Node.js applications. I talk about this more in the wiki, so check that out if you want to know more. The requirements to run the Django application can be found inside the ```community/requirements.txt file```.
+
+### Game Site (Node.js)
+
+As for Node.js, I surprisingly didn't have any issues. Just run
+
+ ```bash
+ npm install
+ ``` 
+
+to install all the packages and then run
+
+```bash
+node node_server.js
+```
+
+to launch the server. You should see something served up on port 3456 on your default IP. It just seems like Node.js is just less bleeding edge, and it took way less struggle to get this running.
 
 ## Features
 
 <strong>Current features</strong>
 
 <ul>
-    <li>Complex filtering of titles to choose challenges for by game, publication year, genre, etc.</li>
-    <li>Basic filtering of challenges by duration</li>
+    <li>Complex filtering of titles to choose challenges for by game, publication year, genre, etc. on the game website</li>
+    <li>Basic filtering of Titles on the Community site.</li>
     <li>Dynamic Database refresh on database being updated</li>
-    <li>Lightweight and Extremely modular SQLite database </li>
-    <li>Lightweight Socket.io Server</li>
+    <li>Lightweight and Portable SQLite database </li>
+    <li>Lightweight-ish Socket.io Server</li>
 </ul>
 
 <strong>Potential Future Features</strong>
 
 <ul>
     <li> ✨ CSS ✨ </li>
-    <li>Ability to comment, upvote, and discus challenges on the Django app</li>
+    <li>Ability to comment, upvote, and discus challenges on the Community app</li>
+    <li>Ability to submit challenges to the community website</li>
     <li>The option for team challenges where you have a 2v2 match</li>
-    <li>Ability to add in custom punishments/dares after each match</li>
+    <li>Ability to add in custom punishments/dares</li>
     <li>Dynamic game title filtering</li>
     <li>Dockerfile & Docker-ized versions</li>
-    <li>Compatibility with IE11 and Safari (one of these is much easier than the other)</li>
 </ul>
 
 ## Special Thanks
