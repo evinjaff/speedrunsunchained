@@ -3,14 +3,17 @@ from mimetypes import init
 from .models import Game
 from .forms import AddGame
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.views.generic.edit import FormView, CreateView, DeleteView, UpdateView
 
 from .models import Challenge, Game, Comment
+
+from ratelimit.decorators import ratelimit
 
 
 class IndexView(generic.ListView):
@@ -47,7 +50,7 @@ class IndexView(generic.ListView):
         """
         return Game.objects.filter(
             pub_date__lte=timezone.now()
-        ).order_by('-pub_date')[:20]
+        ).order_by('-pub_date')[:1]
 
 class GameSearchView(generic.ListView):
     template_name = 'polls/search.html'
@@ -93,7 +96,7 @@ class GameSearchView(generic.ListView):
             print("fired on first if")
             return Game.objects.filter(
             pub_date__lte=timezone.now(), game_title__contains=self.kwargs['search_string'],
-        ).order_by('-pub_date')[:200]
+        ).order_by('-pub_date')[:2000]
 
         #Filter just genre
         elif (self.request.GET['genre'] != "None_Selected") & (self.request.GET['console'] == "None_Selected"):
@@ -101,7 +104,7 @@ class GameSearchView(generic.ListView):
             return Game.objects.filter(
             pub_date__lte=timezone.now(), game_title__contains=self.kwargs['search_string'],
             genre=self.request.GET['genre']
-        ).order_by('-pub_date')[:200]
+        ).order_by('-pub_date')[:2000]
 
         # Filter just console
         elif (self.request.GET['genre'] == "None_Selected") & (self.request.GET['console'] != "None_Selected"):
@@ -109,7 +112,7 @@ class GameSearchView(generic.ListView):
             return Game.objects.filter(
             pub_date__lte=timezone.now(), game_title__contains=self.kwargs['search_string'],
             console=self.request.GET['console']
-        ).order_by('-pub_date')[:200]
+        ).order_by('-pub_date')[:2000]
 
         # Filter Both
         else:
@@ -117,7 +120,7 @@ class GameSearchView(generic.ListView):
             return Game.objects.filter(
             pub_date__lte=timezone.now(), game_title__contains=self.kwargs['search_string'],
             console=self.request.GET['console'], genre=self.request.GET['genre']
-        ).order_by('-pub_date')[:200]
+        ).order_by('-pub_date')[:2000]
 
        
 
@@ -234,13 +237,72 @@ class ChallengeView(generic.DetailView):
 
         print(queried_comments)
 
-
-
-        
-        
         # print(queried)
-        context = {"gameid": pk, "challengeid": chal, "challenge": queried[0], "comments": queried_comments}
+        context = {"gameid": pk, "challengeid": chal, "challenge": queried[0], "comments": queried_comments, "updownvote": (queried[0].upvotes - queried[0].downvotes)}
         return render(request, 'polls/challenge.html', context=context)
+
+@ratelimit(key="post:csrfmiddlewaretoken", rate='1/m', method=['GET', 'POST'])
+class UpvoteRequestView(generic.DetailView):
+    model = Challenge
+    template_name = 'polls/updownvoteajax.html'
+    ratelimit_key = 'ip'
+    ratelimit_method = 'GET'
+
+    print("upvoterequestview")
+
+    def get_queryset(self):
+        return Challenge.objects
+
+    @ratelimit(key='ip', rate='1/m', method=['GET', 'POST'])
+    def custom_page(request, pk, chal):
+
+        print(request)
+        #"gameid": pk, "challengeid": chal
+
+        t = Challenge.objects.filter(game_id=pk, game_sub_id=chal)[0]
+
+        t.upvotes += 1
+
+        t.save()
+
+        context = {"gameid": pk, "challengeid": chal}
+        return render(request, 'polls/updownvoteajax.html', context=context)
+    
+    def beenLimited(request, exception):
+        message = "A few too many tries for today buddy. Please try again tomorrow."
+        return HttpResponse(message)
+
+
+@ratelimit(key="post:csrfmiddlewaretoken", rate='1/m', method=['GET', 'POST'])
+class DownvoteRequestView(generic.DetailView):
+    model = Challenge
+    template_name = 'polls/updownvoteajax.html'
+    ratelimit_key = 'ip'
+    ratelimit_method = 'GET'
+
+    print("upvoterequestview")
+
+    def get_queryset(self):
+        return Challenge.objects
+
+    @ratelimit(key='ip', rate='1/m', method=['GET', 'POST'])
+    def custom_page(request, pk, chal):
+
+        print(request)
+        #"gameid": pk, "challengeid": chal
+
+        t = Challenge.objects.filter(game_id=pk, game_sub_id=chal)[0]
+
+        t.downvotes += 1
+
+        t.save()
+
+        context = {"gameid": pk, "challengeid": chal}
+        return render(request, 'polls/updownvoteajax.html', context=context)
+    
+    def beenLimited(request, exception):
+        message = "A few too many tries for today buddy. Please try again tomorrow."
+        return HttpResponse(message)
 
 
 class ResultsView(generic.DetailView):

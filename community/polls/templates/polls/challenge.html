@@ -1,4 +1,4 @@
-<h1>{{ challenge.challenge_title }}</h1>
+<h1>{{ updownvote }} {{ challenge.challenge_title }}</h1>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
@@ -7,17 +7,77 @@
 
 <br>
 
-<form action="upvote" method="post">
-<input type="submit" value="upvote">
-</form>
+<!-- Oh shit it's a JQuery dependency -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<input type="submit" value="upvote" onclick="requestupvote()">
 
-<form action="downvote" method="post">
-<input type="submit" value="downvote">
-</form>
+<script>
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+let html = document.createElement("p");
+
+html.innerHTML = '{% csrf_token %}';
+
+let token = html.firstChild.value;
+
+console.log(token)
+
+
+
+    function requestupvote(){
+
+    $.ajax({
+        method: "POST" ,
+        url: '{{ challengeid }}/upvote',
+        data: { "csrfmiddlewaretoken": token, },
+        context: document.body
+        }).done(function( msg ) {
+            //alert( "Data Saved: " + msg );
+        });
+
+    }
+
+    function requestdownvote(){
+
+    $.ajax({
+        method: "POST" ,
+        url: '{{ challengeid }}/downvote',
+        data: { "csrfmiddlewaretoken": token, },
+        context: document.body
+        }).done(function( msg ) {
+            //alert( "Data Saved: " + msg );
+        });
+
+    }
+
+
+
+</script>
+
+<input type="submit" value="downvote" onclick="requestdownvote()">
 
 <strong>{{ challenge.challenge_description }}</strong>
 
 <h3>Comments:</h3>
+
+<form action="./downvote" method="post">
+    <input type="submit" value="Add a Comment...">
+</form>
 
 <!-- This will contain the comments -->
 
