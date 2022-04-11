@@ -1,3 +1,4 @@
+{% load polls_extras %}
 <h1>{{ game.game_title }}</h1>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
@@ -16,7 +17,7 @@
 {% endfor %} -->
 
 {% for challenge in game.challenge_set.all %}
-    <label>{{ challenge.upvotes }}</label>
+    <label>{{ challenge.upvotes|subtract:challenge.downvotes }}</label>
     <a href="challenges/{{ challenge.game_sub_id }}">{{ challenge.challenge_title }}</a>
     </label><br>
 {% endfor %}
